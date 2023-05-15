@@ -17,4 +17,8 @@ Notes:
     - django-admin : (optional) list all commands
     - django-admin startproject Eat_BackEnd .
     - python3 manage.py runserver 9000
+    - python3 manage.py startapp playground
+
+2. api:
+    - /playground/hello/ : hello page
 
