@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {useState} from 'react'
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import Login from "./pages/Login/Login";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import {Button, Table, Tabs, Flex, Box, Center} from "@chakra-ui/react";
+import {useGetUser} from "./hooks";
+import {Server} from "./utils/config.jsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [{user, session, isLoading, isError}, userDispatch] = useGetUser();
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+    return (
+
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={
+                    user ? <Dashboard user={user} userDispatch={userDispatch} session={session}/>
+                        : <Navigate to="/login"/>}
+                />
+                <Route path="/login" element={
+                    user ? <Navigate to="/"/>
+                        : <Login userDispatch={userDispatch}/>}
+                />
+            </Routes>
+        </BrowserRouter>
+    )
 }
+
 
 export default App
