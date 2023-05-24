@@ -6,6 +6,7 @@ CNL final : convenient tools for managing eating issues
 **BackEnd : Django**
 
 Tutorial link: https://www.youtube.com/watch?v=rHux0gMZ3Eg
+Official tutorial (very good) : https://docs.djangoproject.com/en/4.2/intro/tutorial02/
 
 Notes:
 
