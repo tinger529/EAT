@@ -50,7 +50,7 @@ const Dashboard = ({user, session, userDispatch}) => {
             <Heading>Dashboard</Heading>
             <Button onClick={handleLogout}>Logout</Button>
             <HStack flex={"max-content"} alignItems={"top"}>
-                <Box maxW={150}>
+                <Box maxW={150} display={{base: "none", lg: "block"}}>
                     <Text>Debug:</Text>
                     <Text>Name: {user.name}</Text>
                     <Text>Groups: {isLoading ? "Loading" : JSON.stringify(groups)}</Text>
