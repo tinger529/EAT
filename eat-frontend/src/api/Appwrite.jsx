@@ -67,6 +67,10 @@ let api = {
             return api.provider().group.get(groupId);
         },
 
+        listGroupMemberships: (groupId) => {
+            return api.provider().group.listMemberships(groupId);
+        },
+
         createGroupMembership: (groupId, userId) => {
             return api.provider().group.createMembership({
                 teamId: groupId,
@@ -79,7 +83,7 @@ let api = {
         // Appwrite only
         updateGroupMembershipStatus: (groupId, memberId, userId, secret) => {
             return api.provider().group.updateMembershipStatus(groupId, memberId, userId, secret);
-        }
+        },
 
 
     }
