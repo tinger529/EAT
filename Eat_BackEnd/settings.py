@@ -31,13 +31,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'playground.apps.PlaygroundConfig',
     'django.contrib.admin',         # admin interface
     'django.contrib.auth',          # authenticating users
-    'django.contrib.contenttypes',
+    'django.contrib.contenttypes',  # a framework for content types
     'django.contrib.sessions',      # not used
     'django.contrib.messages',      # one time notifications
-    'django.contrib.staticfiles',
-    'playground',                   # our playground app
+    'django.contrib.staticfiles',   # static files
+    # 'playground',                   # our playground app
 ]
 
 MIDDLEWARE = [
