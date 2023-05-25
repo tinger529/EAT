@@ -22,3 +22,26 @@ class Choice(models.Model):
     # object representation
     def __str__(self):
         return self.choice_text
+    
+class User(models.Model):
+    name = models.CharField(max_length=100)
+    groups = models.ManyToManyField('Group', related_name='members')
+    password = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Group(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+    
+class LoginSession(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    session_id = models.CharField(max_length=100)
+    expire_time = models.DateTimeField("expire time")
+    
+    def __str__(self):
+        return self.session_id
