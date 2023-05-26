@@ -24,23 +24,23 @@ class Choice(models.Model):
         return self.choice_text
     
 class User(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, default='')
+    password = models.CharField(max_length=100, default='')
+    email = models.CharField(max_length=100, default='')
     groups = models.ManyToManyField('Group', related_name='members')
-    password = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
 class Group(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, default='')
 
     def __str__(self):
         return self.name
     
 class LoginSession(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    session_id = models.CharField(max_length=100)
+    session_id = models.CharField(max_length=100, default='')
     expire_time = models.DateTimeField("expire time")
     
     def __str__(self):

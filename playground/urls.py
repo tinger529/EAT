@@ -4,6 +4,9 @@ from . import views
 # URL configuration
 urlpatterns = [
     path('hello/', views.hello),
-    path('account/', views.create_user),
-    path('account/sessions/<str:email>/', views.create_session),
+    # user APIs
+    path('account/', views.create_get_user),
+    path('account/sessions/email/', views.create_session),
+    path('account/sessions/<str:sessionId>/',views.delete_session),
+    path('account/<str:userId>/',views.get_user),
 ]
