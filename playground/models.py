@@ -30,14 +30,6 @@ class User(models.Model):
 
     def __str__(self):
         return self.name
-
-class Group(models.Model):
-    # todo
-    # modify the columns
-    name = models.CharField(max_length=100, default='')
-    users = models.ManyToManyField(User, related_name='groups')
-    def __str__(self):
-        return self.name
     
 class LoginSession(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -47,5 +39,22 @@ class LoginSession(models.Model):
     def __str__(self):
         return self.session_id
 
+class Group(models.Model):
+    # todo
+    # modify the columns
+    name = models.CharField(max_length=100, default='')
+    users = models.ManyToManyField(User, related_name='groups')
+    def __str__(self):
+        return self.name
+
 # todo
-# add record model and sum model
+# add record model
+class Record(models.Model):
+    name = models.CharField(max_length=100, default='')
+    createdAt = models.DateTimeField("created at")
+    updatedAt = models.DateTimeField("updated at")
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return self.name

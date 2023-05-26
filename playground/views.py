@@ -72,7 +72,7 @@ def create_session(request):
     # set cookie in response header
     iso_8601_time = session.expire_time.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
     sessionidJson = {
-        'id': str(session.id),
+        '$id': str(session.id),
         'userId': str(session.user.id),
         'expireAt': str(iso_8601_time),
     }
