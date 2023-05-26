@@ -20,5 +20,6 @@ from django.urls import path, include
 # playground/hello -> hello and pass to playground/urls.py
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Check: Make sure api ver. 
     path('api/v1/', include('playground.urls')),
 ]
