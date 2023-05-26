@@ -7,3 +7,4 @@ admin.site.register(Choice)
 admin.site.register(User)
 admin.site.register(Group)
 admin.site.register(LoginSession)
+# todo: add record model and sum model

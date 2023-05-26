@@ -11,8 +11,9 @@ from django.views.decorators.csrf import csrf_exempt
 # request handler
 @csrf_exempt
 def hello(request):
-    return render(request, './hello.html', {'name': 'Tinger'})
+    return render(request, './hello.html', {'name': 'Hensuu'})
 
+# user APIs
 @csrf_exempt
 def create_get_user(request):
     if request.method == 'GET':
@@ -26,7 +27,7 @@ def create_get_user(request):
         if session.expire_time > timezone.now():
             user = session.user
             userJson = {
-                'id': str(user.id),
+                '$id': str(user.id),
                 'name': user.name,
                 'password': user.password,
                 'email': user.email,
@@ -46,7 +47,7 @@ def create_get_user(request):
         # check user objects columns
         user = User.objects.create(name=name, password=password, email=email)
         userJson = {
-            'id': str(user.id),
+            '$id': str(user.id),
             'name': user.name,
             'password': user.password,
             'email': user.email,
@@ -68,7 +69,16 @@ def create_session(request):
     session_id = str(uuid.uuid4())
     expire_time = timezone.now() + datetime.timedelta(hours=1)
     session = LoginSession.objects.create(user=user, session_id=session_id, expire_time=expire_time)
-    return HttpResponse(session.session_id, status=201)
+    # set cookie in response header
+    iso_8601_time = session.expire_time.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+    sessionidJson = {
+        'id': str(session.id),
+        'userId': str(session.user.id),
+        'expireAt': str(iso_8601_time),
+    }
+    response = JsonResponse(sessionidJson, status=201)
+    response.set_cookie('session_id', session.session_id,httponly=True,secure=True)
+    return response
 
 @csrf_exempt
 def get_user(request, userId):
@@ -77,7 +87,7 @@ def get_user(request, userId):
     except User.DoesNotExist:
         return HttpResponse('User not found', status=404)
     userJson = {
-        'id': str(user.id),
+        '$id': str(user.id),
         'name': user.name,
         'password': user.password,
         'email': user.email,
@@ -96,3 +106,40 @@ def delete_session(request, sessionId):
     except LoginSession.DoesNotExist:
         return HttpResponse('session not found', status=404)
     return HttpResponse('delete session success', status=204)
+
+# group APIs
+@csrf_exempt
+def create_group(request):
+    # Todo
+    pass
+
+@csrf_exempt
+def get_groupinfo(request, groupId):
+    # Todo
+    pass
+
+@csrf_exempt
+def user_group_relation(request, userId):
+    if request.method == 'GET':
+        # Todo
+        pass
+    elif request.method == 'POST':
+        # Todo
+        pass
+
+# record APIs
+def get_create_record(request, groupId):
+    if request.method == 'GET':
+        # Todo
+        pass
+    elif request.method == 'POST':
+        # Todo
+        pass
+
+def update_delete_record(request, groupId, recordId):
+    if request.method == 'PATCH':
+        # Todo
+        pass
+    elif request.method == 'DELETE':
+        # Todo
+        pass

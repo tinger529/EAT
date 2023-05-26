@@ -27,14 +27,15 @@ class User(models.Model):
     name = models.CharField(max_length=100, default='')
     password = models.CharField(max_length=100, default='')
     email = models.CharField(max_length=100, default='')
-    groups = models.ManyToManyField('Group', related_name='members')
 
     def __str__(self):
         return self.name
 
 class Group(models.Model):
+    # todo
+    # modify the columns
     name = models.CharField(max_length=100, default='')
-
+    users = models.ManyToManyField(User, related_name='groups')
     def __str__(self):
         return self.name
     
@@ -42,6 +43,9 @@ class LoginSession(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     session_id = models.CharField(max_length=100, default='')
     expire_time = models.DateTimeField("expire time")
-    
+
     def __str__(self):
         return self.session_id
+
+# todo
+# add record model and sum model
