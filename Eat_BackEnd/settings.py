@@ -23,21 +23,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-s1(a^i=op7tg)@wfy!b69(30j)n9!zy2&i3u!j*#s14k=bf0gu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Check: DEBUG = False and ALLOWED_HOSTS = ['*']
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'playground.apps.PlaygroundConfig',
     'django.contrib.admin',         # admin interface
     'django.contrib.auth',          # authenticating users
-    'django.contrib.contenttypes',
+    'django.contrib.contenttypes',  # a framework for content types
     'django.contrib.sessions',      # not used
     'django.contrib.messages',      # one time notifications
-    'django.contrib.staticfiles',
-    'playground',                   # our playground app
+    'django.contrib.staticfiles',   # static files
+    # 'playground',                   # our playground app
 ]
 
 MIDDLEWARE = [
