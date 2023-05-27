@@ -47,9 +47,9 @@ let api = {
             console.error('Error in createAccount:', error);
             throw error;
         }
-    
+
     },
-          
+
 
     getAccount: async () => {
         // get login user's account information
@@ -80,8 +80,7 @@ let api = {
                 // Handle any other errors
                 throw new Error(`Unexpected error: ${response.status}`);
             }
-        }
-        catch (error) {
+        } catch (error) {
             console.error('Error in getAccount:', error);
             throw error;
         }
@@ -117,8 +116,7 @@ let api = {
                 // Handle any other errors
                 throw new Error(`Unexpected error: ${response.status}`);
             }
-        }
-        catch (error) {
+        } catch (error) {
 
             console.error('Error in getAccount:', error);
             throw error;
@@ -160,12 +158,11 @@ let api = {
                 // Handle any other errors
                 throw new Error(`Unexpected error: ${response.status}`);
             }
-        }
-        catch (error) {
+        } catch (error) {
             console.error('Error in createSession:', error);
             throw error;
         }
-        
+
 
     },
 
@@ -183,17 +180,30 @@ let api = {
         return fetch(endpoint, {
             method: method,
         })
-        .then(res => {
-          if (res.status === 204) {
-            return 
-          } else {
-            throw Error('Unauthorized') 
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
+            .then(res => {
+                if (res.status === 204) {
+                    return
+                } else {
+                    throw Error('Unauthorized')
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    },
+    createGroup: (groupName) => {
+
+    },
+
+    listGroups: () => {
+
+    },
+
+
+    //return group object
+    getGroupInfo: (groupId) => {
+
+    },
 
 
 };

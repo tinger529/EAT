@@ -327,12 +327,9 @@ const Group = ({user, group, isGroupsLoading}) => {
                             {/*<Text>{JSON.stringify(newData)}</Text>*/}
                             <Menu>
                                 <MenuButton as={IconButton} icon={<SettingsIcon/>} variant='solid'>
-
                                 </MenuButton>
                                 <MenuList>
                                     <MenuItem onClick={handleInvite}>Invite Someone</MenuItem>
-
-
                                 </MenuList>
                             </Menu>
                         </HStack>
