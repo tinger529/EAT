@@ -49,6 +49,7 @@ const Login = ({userDispatch}) => {
         userDispatch({type: FetchState.FETCH_INIT});
         try {
             const session = await api.createSession(email, password);
+
             const data = await api.getAccount();
             userDispatch({type: FetchState.FETCH_SUCCESS, user: data, session: session});
             toast({
