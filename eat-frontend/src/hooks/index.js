@@ -45,6 +45,7 @@ export const useGetGroups = () => {
             dispatch({type: FetchState.FETCH_INIT});
             try {
                 const data = await api.listGroups();
+
                 if (!didCancel) {
                     dispatch({type: FetchState.FETCH_SUCCESS, payload: data.teams});
                 }
@@ -72,6 +73,7 @@ export const useGetGroupInfo = (stale, groupID) => {
                     ...state,
                     isLoading: false,
                     isError: false,
+                    sum: action.sum,
                     records: action.records,
                     members: action.members
                 };
@@ -90,7 +92,8 @@ export const useGetGroupInfo = (stale, groupID) => {
         isLoading: false,
         isError: false,
         records: [],
-        members: []
+        members: [],
+        sum: []
     });
 
     useEffect(() => {
@@ -98,16 +101,18 @@ export const useGetGroupInfo = (stale, groupID) => {
         const getGroupInfo = async () => {
             dispatch({type: FetchState.FETCH_INIT});
             try {
-                const records = await api.listDocuments(Server.databaseID, Server.collectionID, [
-                    Query.equal('groupId', groupID),
-                ]);
-                const members = await api.listGroupMemberships(groupID);
+                //List records
+                const records = await api.listRecords(groupID);
+                console.log(JSON.stringify(records));
+                const group = await api.getGroupInfo(groupID);
 
                 if (!didCancel) {
                     dispatch({
                         type: FetchState.FETCH_SUCCESS,
-                        records: records.documents,
-                        members: members.memberships
+                        sum: records.sum,
+                        records: records.records,
+                        members: group.members,
+                        name: group.name
                     });
                 }
             } catch (e) {
@@ -169,6 +174,7 @@ export const useGetUser = () => {
             dispatch({type: FetchState.FETCH_INIT});
             try {
                 const account = await api.getAccount();
+
                 if (!didCancel) {
                     dispatch({type: FetchState.FETCH_SUCCESS, user: account});
                 }
