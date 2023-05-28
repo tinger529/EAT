@@ -25,23 +25,29 @@ class RecordUserValue(models.Model):
         return self.name
 
 class SumOfGroupPerUser(models.Model):
-    groupid = models.ForeignKey('Group', on_delete=models.CASCADE)
+    groupid = models.CharField(max_length=100, default='')
     userid = models.ForeignKey('User', on_delete=models.CASCADE)
     value = models.CharField(max_length=100, default='')
-    def __str__(self):
-        return self.name
-
-class Record(models.Model):
-    name = models.CharField(max_length=100, default='')
-    createdAt = models.DateTimeField("created at")
-    updatedAt = models.DateTimeField("updated at")
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    
     def __str__(self):
         return self.name
     
 class Group(models.Model):
     name = models.CharField(max_length=100, default='')
     users = models.ManyToManyField(User, related_name='groups')
-    records = models.ManyToManyField(Record, related_name='groups')
+    records = models.ManyToManyField('Record', related_name='groups')
+    def __str__(self):
+        return self.name   
+class Record(models.Model):
+    name = models.CharField(max_length=100, default='')
+    createdAt = models.DateTimeField("created at")
+    updatedAt = models.DateTimeField("updated at")
+    groupid = models.CharField(max_length=100, default='')
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
+
+    
+
+    
+
