@@ -24,9 +24,9 @@ SECRET_KEY = 'django-insecure-s1(a^i=op7tg)@wfy!b69(30j)n9!zy2&i3u!j*#s14k=bf0gu
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Check: DEBUG = False and ALLOWED_HOSTS = ['*']
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*','.vercel.app']
+ALLOWED_HOSTS = ['*'] #'.vercel.app'
 # CSRF_TRUSTED_ORIGINS = ['https://127.0.0.1','https://*.lhr.life']
 CORS_ALLOWED_ORIGINS = ['*']
 # Application definition
@@ -43,7 +43,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -77,10 +76,10 @@ WSGI_APPLICATION = 'Eat_BackEnd.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 

@@ -35,7 +35,10 @@ def create_get_user(request):
             response_data = {
                 "user":userJson
             }
-            return JsonResponse(response_data, status=200)
+            response = JsonResponse(response_data, status=201)
+            response['Access-Control-Allow-Origin'] = '*'
+            return response
+            # return JsonResponse(response_data, status=200)
         else:
             return HttpResponse('session expired', status=401)
         
@@ -55,7 +58,11 @@ def create_get_user(request):
         response_data = {
             "user":userJson
         }
-        return JsonResponse(response_data, status=201)
+        # add header with Access Control Allow Origin
+        response = JsonResponse(response_data, status=201)
+        response['Access-Control-Allow-Origin'] = '*'
+        return response
+        # return JsonResponse(response_data, status=201)
 
 @csrf_exempt
 def create_session(request):
