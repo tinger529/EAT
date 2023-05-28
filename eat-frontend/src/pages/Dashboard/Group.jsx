@@ -391,7 +391,7 @@ const Group = ({user, group, isGroupsLoading}) => {
                     <VStack flex={"max-content"} h={"max"}>
                         <HStack spacing={4}>
                             <Heading>{group.name}</Heading>
-                            <Text>{JSON.stringify(groupId)}</Text>
+
                             <Menu>
                                 <MenuButton as={IconButton} icon={<SettingsIcon/>} variant='solid'>
                                 </MenuButton>
