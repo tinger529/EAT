@@ -60,7 +60,7 @@ const SignUp = ({setRegister, userDispatch}) => {
         } catch (error) {
             toast({
                 title: 'Signup Failed',
-                description: error.response.message,
+                description: JSON.stringify(error),
                 status: 'error',
                 duration: 7000,
                 isClosable: true,

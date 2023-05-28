@@ -63,7 +63,7 @@ const Login = ({userDispatch}) => {
             console.log(JSON.stringify(error))
             toast({
                 title: 'Login Failed',
-                description: error.response.message,
+                description: JSON.stringify(error),
                 status: 'error',
                 duration: 7000,
                 isClosable: true,

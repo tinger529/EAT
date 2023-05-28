@@ -5,7 +5,7 @@ import axios from "axios";
 
 let api = {
 
-        url: "https://94a9b6143a135d.lhr.life",
+        url: "http://127.0.0.1:9000",
 
         example: (data1) => {
             return axios.get(api.url + "/api/v1/example", {
@@ -17,17 +17,17 @@ let api = {
 
         createAccount: (email, password, name) => {
 
-            // use http rest api to communicate with django backend
-            //end point: /api/v1/account
-            //method: POST
-            //return: user
-            //response: 201
-            //error: 400
-            //TODO: implement this function
-
-            const endpoint = '/api/v1/account';
-            const method = 'POST';
-
+            // method: POST
+            // return: user
+            // response: 201
+            // error: 400
+            // TODO: implement this function
+            return axios.post(api.url + "/api/v1/account/", {
+                email: email,
+                password: password,
+                name: name,
+                withCredentials: false,
+            })
 
         },
         createSession: (email, password) => {
@@ -37,75 +37,59 @@ let api = {
             // response: 201
             // error: 400
             //create a session for the user
-            const endpoint = '/api/v1/account/sessions/email';
-            const method = 'POST';
+            // const endpoint = '/api/v1/account/sessions/email';
+            // const method = 'POST';
 
-            try {
-                const response = fetch(endpoint, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password,
-                    }),
-                });
+            // try {
+            //     const response = fetch(endpoint, {
+            //         method: method,
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify({
+            //             email: email,
+            //             password: password,
+            //         }),
+            //     });
 
-                if (response.status === 201) {
-                    // Return the session if the account is created successfully
-                    const data = response.json();
-                    return data.session;
-                } else if (response.status === 400) {
-                    // Handle error if the request is bad
-                    throw new Error('Bad Request');
-                } else {
-                    // Handle any other errors
-                    throw new Error(`Unexpected error: ${response.status}`);
-                }
-            } catch (error) {
-                console.error('Error in createSession:', error);
-                throw error;
-            }
+            //     if (response.status === 201) {
+            //         // Return the session if the account is created successfully
+            //         const data = response.json();
+            //         return data.session;
+            //     } else if (response.status === 400) {
+            //         // Handle error if the request is bad
+            //         throw new Error('Bad Request');
+            //     } else {
+            //         // Handle any other errors
+            //         throw new Error(`Unexpected error: ${response.status}`);
+            //     }
+            // } catch (error) {
+            //     console.error('Error in createSession:', error);
+            //     throw error;
+            // }
+            return axios.post(api.url + '/api/v1/account/sessions/email/', {
+                email: email,
+                password: password,
+                withCredentials: false,
+            })
 
 
 
         },
 
 
-        getAccount: async () => {
+        getAccount: () => {
             // get login user's account information
             // end point: /api/v1/account
             // method: GET
             // return: user
             // response: 200
             // error: 401
-            const endpoint = '/api/v1/account';
+            const endpoint = '/api/v1/account/';
             const method = 'GET';
 
-            try {
-                const response = await fetch(endpoint, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (response.status === 200) {
-                    // Return the session if the account is created successfully
-                    const data = await response.json();
-                    return data.user;
-                } else if (response.status === 401) {
-                    // Handle error if the request is bad
-                    throw new Error('Unauthorized');
-                } else {
-                    // Handle any other errors
-                    throw new Error(`Unexpected error: ${response.status}`);
-                }
-            } catch (error) {
-                console.error('Error in getAccount:', error);
-                throw error;
-            }
+            
+             
 
         },
 
@@ -116,7 +100,7 @@ let api = {
             // return: user
             // response: 200
             // error: 401
-            const endpoint = '/api/v1/account' + userid;
+            const endpoint = '/api/v1/account/' + userid;
             const method = 'GET';
 
             try {

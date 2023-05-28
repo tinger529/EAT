@@ -26,12 +26,16 @@ SECRET_KEY = 'django-insecure-s1(a^i=op7tg)@wfy!b69(30j)n9!zy2&i3u!j*#s14k=bf0gu
 # Check: DEBUG = False and ALLOWED_HOSTS = ['*']
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+
+ALLOWED_HOSTS = ['*'] 
+CSRF_TRUSTED_ORIGINS = ['https://*']
+CORS_ALLOWED_ORIGINS = ['https://*']
 
 
 # Application definition
-
+CORS_ORIGIN_ALLOW_ALL = True
 INSTALLED_APPS = [
+    'corsheaders',
     'playground.apps.PlaygroundConfig',
     'django.contrib.admin',         # admin interface
     'django.contrib.auth',          # authenticating users
@@ -43,8 +47,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    # 'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
