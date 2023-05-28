@@ -18,7 +18,7 @@ let api = {
         };
 
         try {
-            const response = await axios.post(`${api.baseURL}/accounts/create`, data);
+            const response = await axios.post(`${api.baseURL}/account`, data);
             return response.data;
         } catch (error) {
             throw new Error(error.response.data.error); // Adjust the error handling as needed
@@ -33,7 +33,7 @@ let api = {
         // response: 200
         // error: 401
         try {
-            const response = await axios.get(`${api.baseURL}/accounts`);
+            const response = await axios.get(`${api.baseURL}/account`);
             return response.data;
         } catch (error) {
             throw new Error(error.response.data.error); // Adjust the error handling as needed
@@ -47,32 +47,11 @@ let api = {
         // return: user
         // response: 200
         // error: 401
-        const endpoint = '/api/v1/account' + userid;
-        const method = 'GET';
-
         try {
-            const response = await fetch(endpoint, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (response.status === 200) {
-                // Return the session if the account is created successfully
-                const data = await response.json();
-                return data.user;
-
-            } else if (response.status === 401) {
-                // Handle error if the request is bad
-                throw new Error('Unauthorized');
-            } else {
-                // Handle any other errors
-                throw new Error(`Unexpected error: ${response.status}`);
-            }
+            const response = await axios.get(`${api.baseURL}/account/${userid}`);
+            return response.data;
         } catch (error) {
-
-            console.error('Error in getAccount:', error);
-            throw error;
+            throw new Error(error.response.data.error); // Adjust the error handling as needed
         }
 
     },
@@ -91,7 +70,7 @@ let api = {
         };
 
         try {
-            const response = await axios.post(`${api.baseURL}/sessions/create`, data);
+            const response = await axios.post(`${api.baseURL}/sessions/email`, data);
             return response.data;
         } catch (error) {
             throw new Error(error.response.data.error); // Adjust the error handling as needed
@@ -106,7 +85,7 @@ let api = {
         // error: 401
         //delete the current session
         try {
-            const response = await axios.delete(`${api.baseURL}/sessions/current`);
+            const response = await axios.delete(`${api.baseURL}/sessions`);
             return response.data;
         } catch (error) {
             throw new Error(error.response.data.error); // Adjust the error handling as needed
@@ -120,16 +99,16 @@ let api = {
         };
 
         try {
-            const response = await axios.post(`${api.baseURL}/groups/create`, data);
+            const response = await axios.post(`${api.baseURL}/databases/groups`, data);
             return response.data;
         } catch (error) {
             throw new Error(error.response.data.error); // Adjust the error handling as needed
         }
     },
 
-    listGroups: async () => {
+    listGroups: async (userid) => {
         try {
-            const response = await axios.get(`${api.baseURL}/groups`);
+            const response = await axios.get(`${api.baseURL}/databases/${userid}/groups`);
             return response.data;
         } catch (error) {
             throw new Error(error.response.data.error); // Adjust the error handling as needed
