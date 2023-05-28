@@ -78,7 +78,7 @@ let api = {
         },
 
 
-        getAccount: async () => {
+        getAccount: () => {
             // get login user's account information
             // end point: /api/v1/account
             // method: GET
@@ -88,29 +88,8 @@ let api = {
             const endpoint = '/api/v1/account/';
             const method = 'GET';
 
-            try {
-                const response = await fetch(endpoint, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (response.status === 200) {
-                    // Return the session if the account is created successfully
-                    const data = await response.json();
-                    return data.user;
-                } else if (response.status === 401) {
-                    // Handle error if the request is bad
-                    throw new Error('Unauthorized');
-                } else {
-                    // Handle any other errors
-                    throw new Error(`Unexpected error: ${response.status}`);
-                }
-            } catch (error) {
-                console.error('Error in getAccount:', error);
-                throw error;
-            }
+            
+             
 
         },
 

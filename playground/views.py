@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 # request handler
 @csrf_exempt
 def hello(request):
-    return render(request, './hello.html', {'name': 'Hensuu'})
+    return render(request, './hello.html', {'name': 'Tinger'})
 
 # user APIs
 @csrf_exempt
