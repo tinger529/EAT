@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Button,
     Table,
@@ -69,6 +69,7 @@ const Group = ({user, group, isGroupsLoading}) => {
 
     const {isOpen: isInviteOpen, onOpen: onInviteOpen, onClose: onInviteClose} = useDisclosure();
 
+
     const handleUserChange = (e, index) => {
         setNewData(newData.map((innerItem, i) =>
             (i === index) ? {...innerItem, userId: e.target.value} : innerItem
@@ -78,13 +79,13 @@ const Group = ({user, group, isGroupsLoading}) => {
 
         setNewData(newData.map((innerItem, i) => {
             if (i === index) {
-                    return {
-                        ...innerItem,
-                        value: isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value)
-                    }
-                } else {
-                    return innerItem
+                return {
+                    ...innerItem,
+                    value: isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value)
                 }
+            } else {
+                return innerItem
+            }
             }
         ))
     }
@@ -369,6 +370,9 @@ const Group = ({user, group, isGroupsLoading}) => {
         )
     }
 
+    useEffect(() => {
+        setStale({stale: true})
+    }, [group])
 
     return (
         <Box w={"100%"}>
@@ -387,7 +391,7 @@ const Group = ({user, group, isGroupsLoading}) => {
                     <VStack flex={"max-content"} h={"max"}>
                         <HStack spacing={4}>
                             <Heading>{group.name}</Heading>
-                            {/*<Text>{JSON.stringify(newData)}</Text>*/}
+
                             <Menu>
                                 <MenuButton as={IconButton} icon={<SettingsIcon/>} variant='solid'>
                                 </MenuButton>
@@ -398,6 +402,7 @@ const Group = ({user, group, isGroupsLoading}) => {
 
                         </HStack>
                         <InviteModal isOpen={isInviteOpen} onClose={onInviteClose}/>
+
                         {NewDataCard()}
                         {records.map((record) => (
                             <RecordCard key={record.$id} record={record}/>

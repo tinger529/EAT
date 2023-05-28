@@ -12,7 +12,23 @@ import {
     Stack,
     HStack,
     Spacer,
-    Spinner, Divider
+    Spinner,
+    Divider,
+    AlertDialog,
+    AlertDialogOverlay,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogBody,
+    FormControl,
+    FormLabel,
+    Input,
+    Alert,
+    AlertIcon,
+    AlertTitle,
+    AlertDescription,
+    CloseButton,
+    AlertDialogFooter,
+    ButtonGroup, useDisclosure
 } from "@chakra-ui/react";
 import {FetchState, useGetGroups, useGetUser} from "../../hooks/index.js";
 import api from "../../api/api.jsx";
@@ -29,11 +45,12 @@ import {AddIcon} from "@chakra-ui/icons";
     4. Display the records
  */
 const Dashboard = ({user, session, userDispatch}) => {
-    const [{groups, isLoading, isError}, groupDispatch] = useGetGroups();
-
+    const [stale, setStale] = useState(false);
+    const [{groups, isLoading, isError}, groupDispatch] = useGetGroups(stale);
     const [group, setGroup] = useState({});
-    // re
     const toast = useToast();
+    const {isOpen: isCreateOpen, onOpen: onCreateOpen, onClose: onCreateClose} = useDisclosure();
+
     const handleCreateGroup = (e) => {
         toast({
             description: 'Not implemented yet.🥵🥵🥺🥺',
@@ -43,6 +60,69 @@ const Dashboard = ({user, session, userDispatch}) => {
         });
 
     }
+
+    const CreateGroupModal = ({isOpen, onClose}) => {
+
+        const [groupName, setGroupName] = useState("")
+        const [isLoading, setIsLoading] = useState(false)
+        const [isError, setIsError] = useState(false)
+        const [errorMessage, setErrorMessage] = useState("")
+
+        const handleCreate = async () => {
+            setIsLoading(true)
+            setIsError(false)
+            try {
+                const res = await api.createGroup(groupName)
+                toast({
+                    description: 'Group created',
+                    status: 'success',
+                })
+                onClose()
+            } catch (e) {
+                console.log(e)
+                setIsError(true)
+                setErrorMessage(JSON.stringify(e))
+            }
+            setIsLoading(false)
+            setStale(true)
+        }
+
+        return <AlertDialog isOpen={isOpen} onClose={onClose}>
+            <AlertDialogOverlay>
+                <AlertDialogContent>
+                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                        Create group
+                    </AlertDialogHeader>
+
+                    <AlertDialogBody>
+                        <FormControl>
+                            <FormLabel>Group name</FormLabel>
+                            <Input placeholder={"Group name"} onChange={(e) => setGroupName(e.target.value)}></Input>
+                        </FormControl>
+                        {isError && <Alert status="error">
+                            <AlertIcon/>
+                            <AlertTitle mr={2}>Failed to create group</AlertTitle>
+                            <AlertDescription>{errorMessage}</AlertDescription>
+                            <CloseButton position="absolute" right="8px" top="8px" onClick={() => setIsError(false)}/>
+                        </Alert>}
+                    </AlertDialogBody>
+
+                    <AlertDialogFooter>
+                        <ButtonGroup>
+                            <Button onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button colorScheme="blue" onClick={handleCreate} ml={3} isLoading={isLoading}>
+                                Create
+                            </Button>
+                        </ButtonGroup>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialogOverlay>
+        </AlertDialog>
+    }
+
+
     useEffect(() => {
         if (!isLoading && !isError && groups.length > 0) {
 
@@ -85,7 +165,7 @@ const Dashboard = ({user, session, userDispatch}) => {
 
                         }
                         <Divider/>
-                        <Button onClick={() => handleCreateGroup()}
+                        <Button onClick={onCreateOpen}
                                 w={"100%"}
                                 m={1}
                                 variant={"outline"}
@@ -96,9 +176,8 @@ const Dashboard = ({user, session, userDispatch}) => {
                     </Stack>
                     <Group group={group} user={user} isGroupsLoading={isLoading}/>
                 </HStack>
-
-
             </Stack>
+            <CreateGroupModal isOpen={isCreateOpen} onClose={onCreateClose}/>
         </>
     )
 };
