@@ -43,29 +43,29 @@ let api = {
     createDocument: (databaseId, collectionId, data, permissions) => {
         return api
             .provider()
-                .database.createDocument(databaseId, collectionId, 'unique()', data, permissions);
-        },
+            .database.createDocument(databaseId, collectionId, 'unique()', data, permissions);
+    },
 
-        listDocuments: (databaseId, collectionId) => {
-            return api.provider().database.listDocuments(databaseId, collectionId);
-        },
+    listDocuments: (databaseId, collectionId, query) => {
+        return api.provider().database.listDocuments(databaseId, collectionId, query);
+    },
 
-        updateDocument: (databaseId, collectionId, documentId, data) => {
-            return api
-                .provider()
-                .database.updateDocument(databaseId, collectionId, documentId, data);
-        },
+    updateDocument: (databaseId, collectionId, documentId, data) => {
+        return api
+            .provider()
+            .database.updateDocument(databaseId, collectionId, documentId, data);
+    },
 
-        deleteDocument: (databaseId, collectionId, documentId) => {
-            return api.provider().database.deleteDocument(databaseId, collectionId, documentId);
+    deleteDocument: (databaseId, collectionId, documentId) => {
+        return api.provider().database.deleteDocument(databaseId, collectionId, documentId);
         },
 
         // return sum + records
         listRecords: (groupId) => {
             return api.listDocuments(Server.databaseID, Server.collectionID, [
-                Query.equal('groupId', groupId),
+                Query.equal('groupId', [groupId]),
             ]).then((response) => {
-                console.log(response);
+                console.log("list record", groupId, response);
                 return {sum: [], records: response.documents.reverse()}
             })
         },
@@ -83,9 +83,9 @@ let api = {
             })
         },
 
-        deleteRecord: (groupId, recordId) => {
-            return api.deleteDocument(Server.databaseID, Server.collectionID, recordId);
-        },
+    deleteRecord: (groupId, recordId) => {
+        return api.deleteDocument(Server.databaseID, Server.collectionID, recordId);
+    },
 
     updateRecord: (groupId, recordId, data, name) => {
         return api.updateDocument(Server.databaseID, Server.collectionID, recordId, {
@@ -117,14 +117,14 @@ let api = {
     },
 
     // Appwrite only
-        listGroupMemberships: (groupId) => {
-            return api.provider().group.listMemberships(groupId);
-        },
+    listGroupMemberships: (groupId) => {
+        return api.provider().group.listMemberships(groupId);
+    },
 
-        //return group object
-        getGroupInfo: (groupId) => {
-            return api.listGroupMemberships(groupId).then((response) => {
-                return api.getGroup(groupId).then((group) => {
+    //return group object
+    getGroupInfo: (groupId) => {
+        return api.listGroupMemberships(groupId).then((response) => {
+            return api.getGroup(groupId).then((group) => {
                     return {$id: groupId, members: response.memberships, name: group.name}
                 })
             })

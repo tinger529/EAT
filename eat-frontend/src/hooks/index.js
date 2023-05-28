@@ -10,7 +10,7 @@ export const FetchState = {
     FETCH_LOGOUT: 3,
 };
 
-export const useGetGroups = () => {
+export const useGetGroups = (stale) => {
     const reducer = (state, action) => {
         switch (action.type) {
             case FetchState.FETCH_INIT:
@@ -57,7 +57,7 @@ export const useGetGroups = () => {
         };
         getRecords();
         return () => (didCancel = true);
-    }, []);
+    }, [stale]);
 
     return [state];
 };
