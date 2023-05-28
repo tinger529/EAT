@@ -1,7 +1,7 @@
 {
     "builds": [{
         "src": "Eat_BackEnd/wsgi.py",
-        "use": "@vercel/python",
+        "use": "@ardnt/vercel-python-wsgi",
         "config": { "maxLambdaSize": "15mb","runtime": "python3.11" }
     }],
     "routes": [
