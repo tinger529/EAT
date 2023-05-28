@@ -16,6 +16,7 @@ def hello(request):
 # user APIs
 @csrf_exempt
 def create_get_user(request):
+    print(request.body)
     if request.method == 'GET':
         # get session id from request header
         session_id = request.headers.get('cookie').split('=')[1]
@@ -35,7 +36,10 @@ def create_get_user(request):
             response_data = {
                 "user":userJson
             }
-            return JsonResponse(response_data, status=200)
+            response = JsonResponse(response_data, status=201)
+            response['Access-Control-Allow-Origin'] = '*'
+            return response
+            # return JsonResponse(response_data, status=200)
         else:
             return HttpResponse('session expired', status=401)
         
@@ -55,10 +59,29 @@ def create_get_user(request):
         response_data = {
             "user":userJson
         }
-        return JsonResponse(response_data, status=201)
+        # add header with Access Control Allow Origin
+        response = JsonResponse(response_data, status=201)
+        response['Access-Control-Allow-Origin'] = '*'
+        return response
+        # return JsonResponse(response_data, status=201)
+    else:
+        response = HttpResponse('Other Methods', status=200)
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+        
+        return response
 
 @csrf_exempt
 def create_session(request):
+    if request.method == 'OPTIONS':
+        response = HttpResponse('OK', status=200)
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+        return response
+    print("---------------------------------")
+    print(request)
     data = json.loads(request.body)
     email = data.get('email')
     password = data.get('password')
@@ -78,6 +101,7 @@ def create_session(request):
     }
     response = JsonResponse(sessionidJson, status=201)
     response.set_cookie('session_id', session.session_id,httponly=True,secure=True)
+    response['Access-Control-Allow-Origin'] = '*'
     return response
 
 @csrf_exempt

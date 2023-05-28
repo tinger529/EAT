@@ -26,7 +26,10 @@ SECRET_KEY = 'django-insecure-s1(a^i=op7tg)@wfy!b69(30j)n9!zy2&i3u!j*#s14k=bf0gu
 # Check: DEBUG = False and ALLOWED_HOSTS = ['*']
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*'] #'.vercel.app'
+# CSRF_TRUSTED_ORIGINS = ['https://127.0.0.1','https://*.lhr.life']
+CORS_ALLOWED_ORIGINS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Application definition
@@ -43,7 +46,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    # 'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
