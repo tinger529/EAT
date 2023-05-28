@@ -140,7 +140,7 @@ def create_group(request):
         response_data = {
             "group":groupJson
         }
-        SumOfGroupPerUser.objects.create(userid=session.user, groupid=groupid, value=0)
+        SumOfGroupPerUser.objects.create(name=str(name)+"_"+str(session.user.name),userid=session.user, groupid=groupid, value=0)
         return JsonResponse(response_data, status=201)
     else:
         return HttpResponse('session expired', status=401)
@@ -269,12 +269,13 @@ def user_group_relation(request, userId):
                 "group":groupJson
             }
             # add the newuser to sum of group per user
-            SumOfGroupPerUser.objects.create(userid=adduser, groupid=groupId, value=0)
+            SumOfGroupPerUser.objects.create(name=str(group.name)+"_"+str(adduser.name),userid=adduser, groupid=groupId, value=0)
             return JsonResponse(response_data, status=201)
         else:
             return HttpResponse('session expired', status=401)
 
 # record APIs
+@csrf_exempt
 def get_create_record(request, groupId):
     if request.method == 'GET':
         # check if session is valid
@@ -289,29 +290,49 @@ def get_create_record(request, groupId):
                 group = Group.objects.get(id=groupId)
             except Group.DoesNotExist:
                 return HttpResponse('group not found', status=404)
-            queryNum = json.loads(request.body).get('queryNum')
+            data = json.loads(request.body)
+            queryNum = data.get('queryNum')
             if (queryNum == None or queryNum > 20):
                 queryNum = 20
             records = Record.objects.filter(groupid=groupId).order_by('-createdAt')[:queryNum]
+            
             # filter the groups that the user belongs to (users contain the user)
             recordList = []
             sumList = []
             SumOfGroupPerUsers = SumOfGroupPerUser.objects.filter(groupid=groupId)
             for sum in SumOfGroupPerUsers:
-                sumList.append(sum)
+                newVal = int(sum.value)
+                sumJson = {
+                    'name': sum.name,
+                    'value': newVal,
+                    'user': sum.userid.name,
+                    'group': groupId
+                }
+                sumList.append(sumJson)
             for record in records:
+                # get the member data
+                recorduserval = RecordUserValue.objects.filter(recordid=record)
+                memberData = []
+                for recorduser in recorduserval:
+                    newVal = int(recorduser.value)
+                    memberJson = {
+                        'userid': str(recorduser.userid.id),
+                        'value': newVal
+                    }
+                    memberData.append(memberJson)
                 recordJson = {
                     '$id': str(record.id),
                     'name': record.name,
-                    'createdAt': record.createdAt,
-                    'updatedAt': record.updatedAt,
-                    'creator': record.creator,
-                    'groupid': record.groupid,
+                    '$createdAt': record.createdAt,
+                    '$updatedAt': record.updatedAt,
+                    'creator': str(record.creator.id),
+                    'data': memberData
                 }
                 recordList.append(recordJson)
+            
             response_data = {
-                "records":recordList,
-                "sum":sumList
+                'records':recordList,
+                'sum':sumList
             }
             return JsonResponse(response_data, status=200)
         else:
@@ -333,22 +354,42 @@ def get_create_record(request, groupId):
             data = json.loads(request.body)
             name = data.get('name')
             memberData = data.get('data')
+            preSum = 0
+            for member in memberData:
+                try: 
+                    user = User.objects.get(id=member['userId'])
+                except User.DoesNotExist:
+                    return HttpResponse('user not found', status=404)
+                preSum += member['value']
+            if (preSum != 0):
+                return HttpResponse('sum of value is not 0', status=404)
             creator = User.objects.get(id=session.user_id)
             createdTime = timezone.now()
-            record = Record.objects.create(name=name,createdAt=createdTime,updatedAt=createdTime,creator=creator,groupid=groupId)
-            recordId = record.id
+            record = Record.objects.create(name=str(name)+"_"+str(createdTime),createdAt=createdTime,updatedAt=createdTime,creator=creator,groupid=groupId)
             Sum = 0
             thisSumOfGroupPerUser = []
             for member in memberData:
-                user = User.objects.get(id=member['userId'])
+                try: 
+                    user = User.objects.get(id=member['userId'])
+                except User.DoesNotExist:
+                    return HttpResponse('user not found', status=404)
                 value = member['value']
-                recordUserVal = RecordUserValue.objects.create(recordid=record,userid=user,value=value)
+                recordUserVal = RecordUserValue.objects.create(name=str(name)+"_"+str(group.name)+"_"+str(user.name)+"_"+str(createdTime),recordid=record,userid=user,value=value)
                 # update the sum of group per user
-                sumOfGroupPerUser = SumOfGroupPerUser.objects.get(userid=user, groupid=groupId)
-                sumOfGroupPerUser.value += value
-                sumOfGroupPerUser.save()
-                thisSumOfGroupPerUser.append(sumOfGroupPerUser)
-                Sum += sumOfGroupPerUser.value
+                sumOfGroupPerUser_ = SumOfGroupPerUser.objects.get(userid=user, groupid=groupId)
+                curVal = int(sumOfGroupPerUser_.value)
+                curVal += value
+                sumOfGroupPerUser_.value = str(curVal)
+                sumOfGroupPerUser_.save()
+                newValue = int(sumOfGroupPerUser_.value)
+                GroupObj = {
+                    'name': sumOfGroupPerUser_.name,
+                    'user': user.name,
+                    'group': group.name,
+                    'value': newValue
+                }
+                thisSumOfGroupPerUser.append(GroupObj)
+                Sum += value
             if (Sum != 0):
                 return HttpResponse('Sum of member value is not 0', status=404)
             
@@ -368,6 +409,7 @@ def get_create_record(request, groupId):
         else:
             return HttpResponse('session expired', status=401)
 
+@csrf_exempt
 def update_delete_record(request, groupId, recordId):
     if request.method == 'PATCH':
         # check if session is valid
@@ -383,17 +425,32 @@ def update_delete_record(request, groupId, recordId):
                 record = Record.objects.get(id=recordId)
             except Record.DoesNotExist:
                 return HttpResponse('record not found', status=404)
+            try:
+                group = Group.objects.get(id=groupId)
+            except Group.DoesNotExist:
+                return HttpResponse('group not found', status=404)
             data = json.loads(request.body)
             name = data.get('name')
             memberData = data.get('data')
+            preSum = 0
+            for member in memberData:
+                try:
+                    user = User.objects.get(id=member['userId'])
+                except User.DoesNotExist:
+                    return HttpResponse('user not found', status=404)
+                preSum += member['value']
+            if (preSum != 0):
+                return HttpResponse('sum of value is not 0', status=404)
+
             # if name is not None, update the name
             if name != None:
                 record.name = name
+            # now did not update RecordUserValue
             record.updatedAt = timezone.now()
             record.save()
-            Sum = 0
-            group = Group.objects.get(id=groupId)
+            Sum = 0 
             thisSumOfGroupPerUser = []
+            
             # update the recordUserValue
             for member in memberData:
                 user = User.objects.get(id=member['userId'])
@@ -402,14 +459,23 @@ def update_delete_record(request, groupId, recordId):
                     recordUserValue = RecordUserValue.objects.get(recordid=record, userid=user)
                 except RecordUserValue.DoesNotExist:
                     return HttpResponse('recordUserValue not found', status=404)
-                recordUserValue.value = value
+                oldVal = int(recordUserValue.value)
+                recordUserValue.value = str(value)
                 recordUserValue.save()
                 # update the sum of group per user
                 sumOfGroupPerUser = SumOfGroupPerUser.objects.get(userid=user, groupid=groupId)
-                sumOfGroupPerUser.value += value
+                newVal = int(sumOfGroupPerUser.value)
+                newVal = newVal - oldVal + value
+                sumOfGroupPerUser.value = str(newVal)
                 sumOfGroupPerUser.save()
-                thisSumOfGroupPerUser.append(sumOfGroupPerUser)
-                Sum += sumOfGroupPerUser.value
+                Sum += value
+                sumJson = {
+                    'name': sumOfGroupPerUser.name,
+                    'user': user.name,
+                    'group': group.name,
+                    'value': newVal
+                }
+                thisSumOfGroupPerUser.append(sumJson)
             if (Sum != 0):
                 return HttpResponse('Sum of member value is not 0', status=404)
             thisRecord = {
@@ -447,9 +513,11 @@ def update_delete_record(request, groupId, recordId):
             for recordUserValue in recordUserValues:
                 # update the sum of group per user
                 sumOfGroupPerUser = SumOfGroupPerUser.objects.get(userid=recordUserValue.userid, groupid=record.groupid)
-                sumOfGroupPerUser.value -= recordUserValue.value
+                newVal = int(sumOfGroupPerUser.value)
+                newVal -= int(recordUserValue.value)
+                sumOfGroupPerUser.value = str(newVal)
                 sumOfGroupPerUser.save()
-                Sum += sumOfGroupPerUser.value
+                Sum += int(recordUserValue.value)
                 recordUserValue.delete()
             if (Sum != 0):
                 return HttpResponse('Sum of member value is not 0', status=404)

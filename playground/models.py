@@ -18,6 +18,7 @@ class LoginSession(models.Model):
         return self.session_id
     
 class RecordUserValue(models.Model):
+    name = models.CharField(max_length=100, default='')
     recordid = models.ForeignKey('Record', on_delete=models.CASCADE)
     userid = models.ForeignKey('User', on_delete=models.CASCADE)
     value = models.CharField(max_length=100, default='')
@@ -25,6 +26,7 @@ class RecordUserValue(models.Model):
         return self.name
 
 class SumOfGroupPerUser(models.Model):
+    name = models.CharField(max_length=100, default='')
     groupid = models.CharField(max_length=100, default='')
     userid = models.ForeignKey('User', on_delete=models.CASCADE)
     value = models.CharField(max_length=100, default='')
