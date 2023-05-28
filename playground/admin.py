@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import Question,Choice,User, Group, LoginSession
+from .models import User, Group, LoginSession, Record, RecordUserValue, SumOfGroupPerUser
 
-admin.site.register(Question)
-admin.site.register(Choice)
 admin.site.register(User)
 admin.site.register(Group)
 admin.site.register(LoginSession)
-# todo: add record model and sum model
+admin.site.register(Record)
+admin.site.register(RecordUserValue)
+admin.site.register(SumOfGroupPerUser)
