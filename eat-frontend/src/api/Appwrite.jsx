@@ -19,26 +19,30 @@ let api = {
             return api.sdk;
         },
 
-        createAccount: (email, password, name) => {
-            return api.provider().account.create("unique()", email, password, name);
-        },
+    createAccount: (email, password, name) => {
+        return api.provider().account.create("unique()", email, password, name);
+    },
 
-        getAccount: () => {
-            let account = api.provider().account;
-            return account.get();
-        },
+    createSession: (email, password) => {
+        return api.provider().account.createEmailSession(email, password);
+    },
 
-        createSession: (email, password) => {
-            return api.provider().account.createEmailSession(email, password);
-        },
+    getAccount: () => {
+        let account = api.provider().account;
+        return account.get();
+    },
 
-        deleteCurrentSession: (_) => {
-            return api.provider().account.deleteSession("current");
-        },
+    getUserInfo: (userId) => {
 
-        createDocument: (databaseId, collectionId, data, permissions) => {
-            return api
-                .provider()
+    },
+
+    deleteCurrentSession: (_) => {
+        return api.provider().account.deleteSession("current");
+    },
+
+    createDocument: (databaseId, collectionId, data, permissions) => {
+        return api
+            .provider()
                 .database.createDocument(databaseId, collectionId, 'unique()', data, permissions);
         },
 
@@ -83,26 +87,36 @@ let api = {
             return api.deleteDocument(Server.databaseID, Server.collectionID, recordId);
         },
 
-        updateRecord: (groupId, recordId, data, name) => {
-            return api.updateDocument(Server.databaseID, Server.collectionID, recordId, {
-                data: data,
-                name: name,
-            })
-        },
+    updateRecord: (groupId, recordId, data, name) => {
+        return api.updateDocument(Server.databaseID, Server.collectionID, recordId, {
+            data: data,
+            name: name,
+        })
+    },
+
+    listGroups: () => {
+        return api.provider().group.list();
+    },
+
+    inviteGroupMember: (groupId, userId) => {
+        return api.provider().group.createMembership({
+            teamId: groupId,
+            userId: userId,
+            roles: ["owner"],
+            url: "https://google.com", //TODO: Change this to the actual URL
+        });
+    },
+
+    createGroup: (groupName) => {
+        return api.provider().group.create("unique()", groupName);
+    },
 
 
-        createGroup: (groupName) => {
-            return api.provider().group.create("unique()", groupName);
-        },
+    getGroup: (groupId) => {
+        return api.provider().group.get(groupId);
+    },
 
-        listGroups: () => {
-            return api.provider().group.list();
-        },
-
-        getGroup: (groupId) => {
-            return api.provider().group.get(groupId);
-        },
-
+    // Appwrite only
         listGroupMemberships: (groupId) => {
             return api.provider().group.listMemberships(groupId);
         },
@@ -116,14 +130,6 @@ let api = {
             })
         },
 
-        createGroupMember: (groupId, userId) => {
-            return api.provider().group.createMembership({
-                teamId: groupId,
-                userId: userId,
-                roles: "owner",
-                url: "https://google.com", //TODO: Change this to the actual URL
-            });
-        },
 
         // Appwrite only
         updateGroupMembershipStatus: (groupId, memberId, userId, secret) => {
