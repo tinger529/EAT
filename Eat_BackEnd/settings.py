@@ -28,6 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['https://127.0.0.1','https://*.lhr.life']
 
 # Application definition
 
@@ -70,8 +71,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Eat_BackEnd.wsgi.application'
+# WSGI_APPLICATION = 'Eat_BackEnd.wsgi.application'
 
+WSGI_APPLICATION = 'Eat_BackEnd.wsgi.app'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
