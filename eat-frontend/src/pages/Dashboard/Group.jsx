@@ -42,7 +42,7 @@ import {
     AlertDialogHeader,
     Menu,
     MenuList,
-    MenuButton, MenuItem, Spacer
+    MenuButton, MenuItem, Spacer, AlertIcon, AlertTitle, AlertDescription, Alert, CloseButton
 } from "@chakra-ui/react";
 import {FetchState, useGetGroupInfo, useGetUser} from "../../hooks/index.js";
 import api from "../../api/api.jsx";
@@ -67,6 +67,8 @@ const Group = ({user, group, isGroupsLoading}) => {
     const [newData, setNewData] = useState([{userId: "", value: 0}, {userId: "", value: 0}]);
     const toast = useToast();
 
+    const {isOpen: isInviteOpen, onOpen: onInviteOpen, onClose: onInviteClose} = useDisclosure();
+
     const handleUserChange = (e, index) => {
         setNewData(newData.map((innerItem, i) =>
             (i === index) ? {...innerItem, userId: e.target.value} : innerItem
@@ -75,7 +77,7 @@ const Group = ({user, group, isGroupsLoading}) => {
     const handleValueChange = (e, index) => {
 
         setNewData(newData.map((innerItem, i) => {
-                if (i === index) {
+            if (i === index) {
                     return {
                         ...innerItem,
                         value: isNaN(parseInt(e.target.value)) ? 0 : parseInt(e.target.value)
@@ -174,15 +176,78 @@ const Group = ({user, group, isGroupsLoading}) => {
         notImplemented()
     }
 
-    const handleInvite = (e) => {
-        notImplemented()
-    }
 
     const notImplemented = () => {
         toast({
             description: 'Not implemented yet.🥵🥵🥺🥺',
             status: 'warning',
         })
+    }
+
+    const InviteModal = ({isOpen, onClose}) => {
+
+        const [email, setEmail] = useState("")
+        const [invitedUserId, setInvitedUserId] = useState("")
+        const [isLoading, setIsLoading] = useState(false)
+        const [isError, setIsError] = useState(false)
+        const [errorMessage, setErrorMessage] = useState("")
+
+        const handleInvite = async () => {
+            setIsLoading(true)
+            setIsError(false)
+            try {
+                const res = await api.inviteGroupMember(groupId, invitedUserId)
+                toast({
+                    description: 'Invitation sent',
+                    status: 'success',
+                })
+                onClose()
+            } catch (e) {
+                console.log(e)
+                setIsError(true)
+                setErrorMessage(JSON.stringify(e))
+            }
+            setIsLoading(false)
+        }
+
+        return <AlertDialog isOpen={isOpen} onClose={onClose}>
+            <AlertDialogOverlay>
+                <AlertDialogContent>
+                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                        Invite user
+                    </AlertDialogHeader>
+
+                    <AlertDialogBody>
+                        <FormControl>
+                            <FormLabel>Email address</FormLabel>
+                            <Input disabled={true} placeholder={"Email address"}
+                                   onChange={(e) => setEmail(e.target.value)}></Input>
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel>User ID</FormLabel>
+                            <Input placeholder={"User ID"} onChange={(e) => setInvitedUserId(e.target.value)}></Input>
+                        </FormControl>
+                        {isError && <Alert status="error">
+                            <AlertIcon/>
+                            <AlertTitle mr={2}>Failed to invite user</AlertTitle>
+                            <AlertDescription>{errorMessage}</AlertDescription>
+                            <CloseButton position="absolute" right="8px" top="8px" onClick={() => setIsError(false)}/>
+                        </Alert>}
+                    </AlertDialogBody>
+
+                    <AlertDialogFooter>
+                        <ButtonGroup>
+                            <Button onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button colorScheme="blue" onClick={handleInvite} ml={3} isLoading={isLoading}>
+                                Invite
+                            </Button>
+                        </ButtonGroup>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialogOverlay>
+        </AlertDialog>
     }
 
     const NewDataCard = () => {
@@ -308,12 +373,10 @@ const Group = ({user, group, isGroupsLoading}) => {
     return (
         <Box w={"100%"}>
             {isLoading || isGroupsLoading ?
-
                 <Center w={"100%"} h={"100vh"}>
                     <Spinner p={4}/>
                     <Text p={4}>Loading...</Text>
                 </Center>
-
                 :
                 isError ?
                     <Center w={"100%"} h={"100vh"}>
@@ -329,10 +392,12 @@ const Group = ({user, group, isGroupsLoading}) => {
                                 <MenuButton as={IconButton} icon={<SettingsIcon/>} variant='solid'>
                                 </MenuButton>
                                 <MenuList>
-                                    <MenuItem onClick={handleInvite}>Invite Someone</MenuItem>
+                                    <MenuItem onClick={onInviteOpen}>Invite Someone</MenuItem>
                                 </MenuList>
                             </Menu>
+
                         </HStack>
+                        <InviteModal isOpen={isInviteOpen} onClose={onInviteClose}/>
                         {NewDataCard()}
                         {records.map((record) => (
                             <RecordCard key={record.$id} record={record}/>
