@@ -43,7 +43,7 @@ def create_get_user(request):
         else:
             return HttpResponse('session expired', status=401)
         
-    if request.method == 'POST':
+    elif request.method == 'POST':
         data = json.loads(request.body)
         email = data.get('email')
         password = data.get('password')
@@ -297,7 +297,8 @@ def user_group_relation(request, userId):
             return JsonResponse(response_data, status=201)
         else:
             return HttpResponse('session expired', status=401)
-
+    else:
+        return HttpResponse('Other Methods', status=200)
 # record APIs
 @csrf_exempt
 def get_create_record(request, groupId):
@@ -432,7 +433,8 @@ def get_create_record(request, groupId):
             return JsonResponse(response_data, status=201)
         else:
             return HttpResponse('session expired', status=401)
-
+    else:
+        return HttpResponse('Other Methods', status=200)
 @csrf_exempt
 def update_delete_record(request, groupId, recordId):
     if request.method == 'PATCH':
@@ -549,3 +551,5 @@ def update_delete_record(request, groupId, recordId):
             return HttpResponse('record deleted', status=204)
         else:
             return HttpResponse('session expired', status=401)
+    else:
+        return HttpResponse('Other Methods', status=200)
