@@ -27,11 +27,12 @@ SECRET_KEY = 'django-insecure-s1(a^i=op7tg)@wfy!b69(30j)n9!zy2&i3u!j*#s14k=bf0gu
 DEBUG = True
 
 ALLOWED_HOSTS = ['*'] 
-CSRF_TRUSTED_ORIGINS = ['https://*','https://*.lhr.life']
+CSRF_TRUSTED_ORIGINS = ['https://*']
 CORS_ALLOWED_ORIGINS = ['*']
 # Application definition
-
+CORS_ORIGIN_ALLOW_ALL = True
 INSTALLED_APPS = [
+    'django-cors-headers',
     'playground.apps.PlaygroundConfig',
     'django.contrib.admin',         # admin interface
     'django.contrib.auth',          # authenticating users
