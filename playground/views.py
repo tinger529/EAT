@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Group, LoginSession
+from .models import User, Group, LoginSession, Record, RecordUserValue, SumOfGroupPerUser
 import json
 from django.http import JsonResponse
 import uuid
@@ -96,7 +96,6 @@ def get_user(request, userId):
         "user":userJson
     }
     return JsonResponse(response_data, status=200)
-
 
 @csrf_exempt
 def delete_session(request, sessionId):
