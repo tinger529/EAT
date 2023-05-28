@@ -1,5 +1,7 @@
 //TODO: use rest api to communicate with django backend
+
 import axios from "axios";
+
 
 let api = {
 
@@ -65,6 +67,7 @@ let api = {
                 console.error('Error in createSession:', error);
                 throw error;
             }
+
 
 
         },
@@ -143,6 +146,7 @@ let api = {
 
         },
 
+
         deleteCurrentSession: async () => {
             // end point: /api/v1/account/sessions/{sessionId}
             // method: DELETE
@@ -153,6 +157,7 @@ let api = {
 
             const endpoint = '/api/v1/account/sessions/{sessionId}';
             const method = 'DELETE';
+
 
             return fetch(endpoint, {
                 method: method,
@@ -206,9 +211,11 @@ let api = {
         //return group object
         getGroupInfo: (groupId) => {
 
+
         },
 
     }
 ;
+
 
 export default api;
