@@ -39,7 +39,7 @@ let api = {
             const method = 'POST';
 
             try {
-                const response = await fetch(endpoint, {
+                const response = fetch(endpoint, {
                     method: method,
                     headers: {
                         'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ let api = {
 
                 if (response.status === 201) {
                     // Return the session if the account is created successfully
-                    const data = await response.json();
+                    const data = response.json();
                     return data.session;
                 } else if (response.status === 400) {
                     // Handle error if the request is bad
