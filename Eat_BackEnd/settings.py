@@ -26,9 +26,8 @@ SECRET_KEY = 'django-insecure-s1(a^i=op7tg)@wfy!b69(30j)n9!zy2&i3u!j*#s14k=bf0gu
 # Check: DEBUG = False and ALLOWED_HOSTS = ['*']
 DEBUG = False
 
-ALLOWED_HOSTS = ['.vercel.app']
-
-# CSRF_TRUSTED_ORIGINS = ['https://127.0.0.1','https://*.lhr.life']
+ALLOWED_HOSTS = ['*','.vercel.app']
+CSRF_TRUSTED_ORIGINS = ['https://127.0.0.1','https://*.lhr.life']
 
 # Application definition
 
@@ -71,9 +70,8 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'Eat_BackEnd.wsgi.application'
+WSGI_APPLICATION = 'Eat_BackEnd.wsgi.application'
 
-WSGI_APPLICATION = 'Eat_BackEnd.wsgi.app'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
