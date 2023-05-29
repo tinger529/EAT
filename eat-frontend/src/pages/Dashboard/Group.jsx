@@ -360,7 +360,7 @@ const Group = ({user, group, isGroupsLoading}) => {
                         ) : (
                         <StatHelpText color="red.500">
                             <StatArrow type="decrease" />
-                            {item.value}
+                            {Math.abs(item.value)}
                         </StatHelpText>
                         )}
                         </Box>
