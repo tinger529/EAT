@@ -40,9 +40,10 @@ import {
     AlertDialogCloseButton,
     AlertDialogBody,
     AlertDialogHeader,
+    Avatar,
     Menu,
     MenuList,
-    MenuButton, MenuItem, Spacer, AlertIcon, AlertTitle, AlertDescription, Alert, CloseButton
+    MenuButton, MenuItem, Spacer, AlertIcon, AlertTitle, AlertDescription, Alert, CloseButton, Tag, TagLabel, TagCloseButton , Stat, StatLabel, StatNumber, StatHelpText, StatArrow, StatGroup
 } from "@chakra-ui/react";
 import {FetchState, useGetGroupInfo, useGetUser} from "../../hooks/index.js";
 import api from "../../api/api.jsx";
@@ -307,6 +308,15 @@ const Group = ({user, group, isGroupsLoading}) => {
             </HStack>
         </Card>
     }
+    //mapping records data's userid to username
+    const mappedRecords = records.map((record) => {
+        const mappedData = JSON.parse(record.data).map((item) => {
+            const user = members.find((member) => member.$id === item.userId)
+            return {...item, userName: user.userName}
+        })
+        return {...record, data: mappedData}
+    })
+
 
     const RecordCard = ({record}) => {
 
@@ -331,9 +341,35 @@ const Group = ({user, group, isGroupsLoading}) => {
                     </HStack>
                 </Card>
                 <Collapse in={isDataOpen} animateOpacity>
-                    <Box p='40px' color='white' mt='4' bg='gray.600' rounded='md' shadow='md'>
-                        <Text>{record.data}</Text>
-                    </Box>
+                <Box p="30px" color="black" mt="2" rounded="md" shadow="md">
+                <Flex direction="row">
+                    {mappedRecords.find((item) => item.$id === record.$id).data.map((item, index) => (
+                    <Stat key={index} mb="2" mr="250" flex="1">
+                    <Flex align="center">
+                        <Avatar name={item.userName} size="sm" mr="2" />
+                        <Box>
+                            <StatLabel>{item.userName}</StatLabel>
+                            <StatNumber color={item.value < 0 ? "red.500" : "teal.500"}>
+                            {item.value < 0 ? `-${Math.abs(item.value)}` : item.value}
+                            </StatNumber>
+                        {item.value > 0 ? (
+                        <StatHelpText color="green.500">
+                            <StatArrow type="increase" />
+                            {item.value}
+                        </StatHelpText>
+                        ) : (
+                        <StatHelpText color="red.500">
+                            <StatArrow type="decrease" />
+                            {item.value}
+                        </StatHelpText>
+                        )}
+                        </Box>
+                    </Flex>
+                        
+                    </Stat>
+                    ))}
+                </Flex>
+                </Box>
                 </Collapse>
                 <AlertDialog
                     motionPreset='slideInBottom'
