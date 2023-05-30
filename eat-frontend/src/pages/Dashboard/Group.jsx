@@ -59,6 +59,9 @@ import {MdAdd, MdMinimize, MdSave} from "react-icons/md";
     3. Mapping records to username
     4. Display the records
  */
+
+
+
 const Group = ({user, group, isGroupsLoading}) => {
     const groupId = group ? group.$id : null;
     const [stale, setStale] = useState({stale: false});
@@ -70,6 +73,8 @@ const Group = ({user, group, isGroupsLoading}) => {
 
     const {isOpen: isInviteOpen, onOpen: onInviteOpen, onClose: onInviteClose} = useDisclosure();
 
+    const [selectedRecord, setSelectedRecord] = useState(null);
+    const [selectedRecordIndex, setSelectedRecordIndex] = useState(null);
 
     const handleUserChange = (e, index) => {
         setNewData(newData.map((innerItem, i) =>
@@ -173,11 +178,11 @@ const Group = ({user, group, isGroupsLoading}) => {
     }
 
 
-    const handleUpdate = (e) => {
+    const handleUpdate = async (recordId) => {
         //TODO: implement update
         notImplemented()
-    }
-
+    };
+      
 
     const notImplemented = () => {
         toast({
@@ -252,6 +257,36 @@ const Group = ({user, group, isGroupsLoading}) => {
         </AlertDialog>
     }
 
+    const Show_each_amount = ({member}) => {
+        const sum = sumMemberValues(member.$id)
+        return (
+            <Stat key={member.$id} mb="2" mr="50" flex="1">
+                <Flex align="center">
+                <Avatar name={member.userName} size="sm" mr="4" />
+                <Box>
+                <StatLabel whiteSpace="nowrap">{member.userName}</StatLabel>
+                <StatNumber color={sum < 0 ? "red.500" : "teal.500"}>
+                    {sum < 0 ? `-${Math.abs(sum)}` : sum}
+                </StatNumber>
+                {sum > 0 ? (
+                    <StatHelpText color="green.500">
+                        <StatArrow type="increase"/>
+                        {sum}
+                    </StatHelpText>
+                ) : (
+                    <StatHelpText color="red.500">
+                        <StatArrow type="decrease"/>
+                        {Math.abs(sum)}
+                    </StatHelpText>
+                )}
+                </Box>
+                </Flex>
+            </Stat>
+        )
+
+    }
+    
+
     const NewDataCard = () => {
         return <Card width={"100%"} direction={{base: 'column'}} overflow='hidden'>
             <HStack>
@@ -317,6 +352,18 @@ const Group = ({user, group, isGroupsLoading}) => {
         return {...record, data: mappedData}
     })
 
+    //summing up the amount of money each member owes
+    const sumMemberValues = (memberId) => {
+        
+        const memberRecords = mappedRecords.filter((record) => record.data.some((item) => item.userId === memberId))
+        const memberValues = memberRecords.map((record) => {
+            const memberValue = record.data.find((item) => item.userId === memberId).value
+            return memberValue
+        })
+        const sum = memberValues.reduce((a, b) => a + b, 0)
+        return sum
+    }
+
 
     const RecordCard = ({record}) => {
 
@@ -347,11 +394,13 @@ const Group = ({user, group, isGroupsLoading}) => {
                     <Stat key={index} mb="2" mr="250" flex="1">
                     <Flex align="center">
                         <Avatar name={item.userName} size="sm" mr="2" />
-                        <Box>
-                            <StatLabel>{item.userName}</StatLabel>
+                        <Box> 
+                            <StatLabel w="10" whiteSpace="nowrap">{item.userName}</StatLabel>
+                            <Box flexShrink={0}>
                             <StatNumber color={item.value < 0 ? "red.500" : "teal.500"}>
                             {item.value < 0 ? `-${Math.abs(item.value)}` : item.value}
                             </StatNumber>
+                            </Box>
                         {item.value > 0 ? (
                         <StatHelpText color="green.500">
                             <StatArrow type="increase" />
@@ -427,6 +476,7 @@ const Group = ({user, group, isGroupsLoading}) => {
                     <VStack flex={"max-content"} h={"max"}>
                         <HStack spacing={4}>
                             <Heading>{group.name}</Heading>
+                            
 
                             <Menu>
                                 <MenuButton as={IconButton} icon={<SettingsIcon/>} variant='solid'>
@@ -438,11 +488,19 @@ const Group = ({user, group, isGroupsLoading}) => {
 
                         </HStack>
                         <InviteModal isOpen={isInviteOpen} onClose={onInviteClose}/>
-
+                        //show the amount of money each member owes
+                        <Box p="30px" color="black" mt="2" rounded="md">
+                        <Flex direction="row">
+                            {members.map((member) => (
+                                <Show_each_amount key={member.$id} member={member}/>
+                            ))}
+                        </Flex>
+                        </Box>
                         {NewDataCard()}
                         {records.map((record) => (
                             <RecordCard key={record.$id} record={record}/>
                         ))}
+
                     </VStack>
             }
         </Box>
