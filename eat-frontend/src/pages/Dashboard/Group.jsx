@@ -268,17 +268,6 @@ const Group = ({user, group, isGroupsLoading}) => {
                 <StatNumber color={sum < 0 ? "red.500" : "teal.500"}>
                     {sum < 0 ? `-${Math.abs(sum)}` : sum}
                 </StatNumber>
-                {sum > 0 ? (
-                    <StatHelpText color="green.500">
-                        <StatArrow type="increase"/>
-                        {sum}
-                    </StatHelpText>
-                ) : (
-                    <StatHelpText color="red.500">
-                        <StatArrow type="decrease"/>
-                        {Math.abs(sum)}
-                    </StatHelpText>
-                )}
                 </Box>
                 </Flex>
             </Stat>
@@ -389,35 +378,30 @@ const Group = ({user, group, isGroupsLoading}) => {
                 </Card>
                 <Collapse in={isDataOpen} animateOpacity>
                 <Box p="30px" color="black" mt="2" rounded="md" shadow="md">
-                <Flex direction="row">
+                    <StatGroup>
                     {mappedRecords.find((item) => item.$id === record.$id).data.map((item, index) => (
-                    <Stat key={index} mb="2" mr="250" flex="1">
-                    <Flex align="center">
+                    <Stat key={index} w="100" mr="150" flex="1">
+                    <Flex direction="row">
                         <Avatar name={item.userName} size="sm" mr="2" />
                         <Box> 
-                            <StatLabel w="10" whiteSpace="nowrap">{item.userName}</StatLabel>
-                            <Box flexShrink={0}>
-                            <StatNumber color={item.value < 0 ? "red.500" : "teal.500"}>
-                            {item.value < 0 ? `-${Math.abs(item.value)}` : item.value}
-                            </StatNumber>
-                            </Box>
-                        {item.value > 0 ? (
-                        <StatHelpText color="green.500">
-                            <StatArrow type="increase" />
-                            {item.value}
-                        </StatHelpText>
-                        ) : (
-                        <StatHelpText color="red.500">
-                            <StatArrow type="decrease" />
-                            {Math.abs(item.value)}
-                        </StatHelpText>
-                        )}
+                        <StatLabel w="10" whiteSpace="nowrap">{item.userName}</StatLabel>
+                            {item.value > 0 ? (
+                            <StatHelpText color="green.500" whiteSpace="noWrap">
+                                <StatArrow type="increase" whiteSpace="nowrap"/>
+                                {item.value}
+                            </StatHelpText>
+                            ) : (
+                            <StatHelpText color="red.500" whiteSpace="noWrap">
+                                <StatArrow type="decrease" />
+                                {Math.abs(item.value)}
+                            </StatHelpText>
+                            )}
                         </Box>
                     </Flex>
                         
                     </Stat>
                     ))}
-                </Flex>
+                    </StatGroup>
                 </Box>
                 </Collapse>
                 <AlertDialog
