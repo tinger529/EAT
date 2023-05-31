@@ -111,7 +111,7 @@ def create_session(request):
         'expireAt': str(iso_8601_time),
     }
     response = JsonResponse(sessionidJson, status=201)
-    response.set_cookie('session_id', session.session_id,httponly=True,secure=True,samesite='None',expires=iso_8601_time)
+    response.set_cookie('session_id', session.session_id,httponly=True,expires=iso_8601_time)
     # response['Access-Control-Allow-Origin'] = '*'
     return response
 
