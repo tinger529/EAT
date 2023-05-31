@@ -4,6 +4,7 @@ import axios from "axios";
 
 
 let api = {
+        // sessionId: null,
 
         url: "http://127.0.0.1:8000",
 
@@ -21,35 +22,32 @@ let api = {
                 email: email,
                 password: password,
                 name: name,
-            },{
-                headers: {
-                    withCredentials: true
-                }
+            }).then((response) => {
+                return response.data.user;
             })
         },
         createSession: (email, password) => {
-            
+                        
             return axios.post(api.url + '/api/v1/account/sessions/email/', {
                 email: email,
                 password: password,
-            },{
-                headers: {
-                    withCredentials: true
-                }
             })
         },
 
 
         getAccount: () => {
-
             return axios.get(api.url + '/api/v1/account/', {
                 // withCredentials: true,
                 // origin: '*'
+            
             },{
                 headers: {
                     withCredentials: true
                 }
+            }).then((response) => {
+                return response.data.user;
             })
+
             
         },
 
@@ -62,14 +60,15 @@ let api = {
             // error: 401
             const endpoint = '/api/v1/account/' + userid + '/';
 
-            return axios.get(endpoint, {
+            return axios.get(api.url + endpoint, {
                 // withCredentials: true,
                 userId: userid,
-                // origin: '*'
             },{
                 headers: {
                     withCredentials: true
                 }
+            }).then((response) => {
+                return response.data.user;
             })
 
         },
@@ -85,9 +84,8 @@ let api = {
 
             const endpoint = '/api/v1/account/sessions/';
 
-            return axios.delete(endpoint, {
-                // withCredentials: true,
-                // origin: '*'
+            return axios.delete(api.url + endpoint, {
+
             },{
                 headers: {
                     withCredentials: true
@@ -99,7 +97,7 @@ let api = {
         listRecords: (groupId) => {
             const endpoint = '/api/v1/databases/groups/' + groupId + '/records/';
 
-            return axios.get(endpoint, {
+            return axios.get(api.url + endpoint, {
                 // withCredentials: true,
                 groupId: groupId,
                 // origin: '*'
@@ -107,13 +105,16 @@ let api = {
                 headers: {
                     withCredentials: true
                 }
+            }).then((response) => {
+                
+                return response.data;
             })
         },
 
         createRecord: (groupId, name, data) => {
             const endpoint = '/api/v1/databases/groups/' + groupId + '/records/';
 
-            return axios.post(endpoint, {
+            return axios.post(api.url + endpoint, {
                 name: name,
                 data: data,
                 // withCredentials: true,
@@ -129,7 +130,7 @@ let api = {
         deleteRecord: (groupId, recordId) => {
             const endpoint = '/api/v1/databases/groups/' + groupId + '/records/' + recordId + '/';
 
-            return axios.delete(endpoint, {
+            return axios.delete(api.url + endpoint, {
                 // withCredentials: true,
                 groupId: groupId,
                 recordId: recordId,
@@ -144,7 +145,7 @@ let api = {
         updateRecord: (groupId, recordId, data, name) => {
             const endpoint = '/api/v1/databases/groups/' + groupId + '/records/' + recordId + '/';
 
-            return axios.patch(endpoint, {
+            return axios.patch(api.url + endpoint, {
                 data: data,
                 name: name,
                 // withCredentials: true,
@@ -161,21 +162,23 @@ let api = {
         listGroups: (userId) => {
             const endpoint = '/api/v1/databases/users/' + userId + '/groups/';
 
-            return axios.get(endpoint, {
+            return axios.get(api.url + endpoint, {
                 // withCredentials: true,
-                userId: userId,
+                
                 // origin: '*'
             },{
                 headers: {
                     withCredentials: true
                 }
+            }).then((response) => {
+                return response.data.groups;
             })
         },
 
-        inviteGroupMember: (groupId, userId) => {
-            const endpoint = '/api/v1/databases/users/' + userId + '/groups/';
+        inviteGroupMember: (groupId,myUserId, userId) => {
+            const endpoint = '/api/v1/databases/users/' + myUserId + '/groups/';
 
-            return axios.post(endpoint, {
+            return axios.post(api.url + endpoint, {
                 groupId: groupId,
                 // withCredentials: true,
                 userId: userId,
@@ -190,7 +193,7 @@ let api = {
         createGroup: (groupName) => {
             const endpoint = '/api/v1/databases/groups/';
 
-            return axios.post(endpoint, {
+            return axios.post(api.url + endpoint, {
                 name: groupName,
                 // withCredentials: true,
                 // origin: '*'
@@ -205,7 +208,7 @@ let api = {
         getGroup: (groupId) => {
             const endpoint = '/api/v1/databases/groups/' + groupId + '/';
 
-            return axios.get(endpoint, {
+            return axios.get(api.url + endpoint, {
                 // withCredentials: true,
                 groupId: groupId,
                 // origin: '*'
@@ -220,7 +223,7 @@ let api = {
         getGroupInfo: (groupId) => {
             const endpoint = '/api/v1/databases/groups/' + groupId + '/';
 
-            return axios.get(endpoint, {
+            return axios.get(api.url + endpoint, {
                 // withCredentials: true,
                 groupId: groupId,
                 // origin: '*'
@@ -228,6 +231,8 @@ let api = {
                 headers: {
                     withCredentials: true
                 }
+            }).then((response) => {
+                return response.data.group;
             })
 
         },

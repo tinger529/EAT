@@ -65,7 +65,7 @@ let api = {
             return api.listDocuments(Server.databaseID, Server.collectionID, [
                 Query.equal('groupId', [groupId]),
             ]).then((response) => {
-                console.log("list record", groupId, response);
+                
                 return {sum: [], records: response.documents.reverse()}
             })
         },
@@ -95,7 +95,9 @@ let api = {
     },
 
     listGroups: () => {
-        return api.provider().group.list();
+        return api.provider().group.list().then((response) => {
+            return response.teams;
+        });
     },
 
     inviteGroupMember: (groupId, userId) => {

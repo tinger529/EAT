@@ -10,7 +10,7 @@ export const FetchState = {
     FETCH_LOGOUT: 3,
 };
 
-export const useGetGroups = (stale) => {
+export const useGetGroups = (stale,userId) => {
     const reducer = (state, action) => {
         switch (action.type) {
             case FetchState.FETCH_INIT:
@@ -20,7 +20,7 @@ export const useGetGroups = (stale) => {
                     ...state,
                     isLoading: false,
                     isError: false,
-                    groups: action.payload,
+                    groups: action.groups,
                 };
             case FetchState.FETCH_FAILURE:
                 return {
@@ -44,10 +44,10 @@ export const useGetGroups = (stale) => {
         const getRecords = async () => {
             dispatch({type: FetchState.FETCH_INIT});
             try {
-                const data = await api.listGroups();
-
+                const data = await api.listGroups(userId);
+                
                 if (!didCancel) {
-                    dispatch({type: FetchState.FETCH_SUCCESS, payload: data.teams});
+                    dispatch({type: FetchState.FETCH_SUCCESS, groups: data});
                 }
             } catch (e) {
                 if (!didCancel) {
@@ -99,13 +99,12 @@ export const useGetGroupInfo = (stale, groupID) => {
     useEffect(() => {
         let didCancel = false;
         const getGroupInfo = async () => {
+            if (!groupID) return;
             dispatch({type: FetchState.FETCH_INIT});
             try {
                 //List records
                 const records = await api.listRecords(groupID);
-                console.log(JSON.stringify(records));
                 const group = await api.getGroupInfo(groupID);
-
                 if (!didCancel) {
                     dispatch({
                         type: FetchState.FETCH_SUCCESS,
@@ -174,7 +173,7 @@ export const useGetUser = () => {
             dispatch({type: FetchState.FETCH_INIT});
             try {
                 const account = await api.getAccount();
-
+                
                 if (!didCancel) {
                     dispatch({type: FetchState.FETCH_SUCCESS, user: account});
                 }

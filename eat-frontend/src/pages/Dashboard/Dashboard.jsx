@@ -46,7 +46,7 @@ import {AddIcon} from "@chakra-ui/icons";
  */
 const Dashboard = ({user, session, userDispatch}) => {
     const [stale, setStale] = useState(false);
-    const [{groups, isLoading, isError}, groupDispatch] = useGetGroups(stale);
+    const [{groups, isLoading, isError}, groupDispatch] = useGetGroups(stale,user.$id);
     const [group, setGroup] = useState({});
     const toast = useToast();
     const {isOpen: isCreateOpen, onOpen: onCreateOpen, onClose: onCreateClose} = useDisclosure();

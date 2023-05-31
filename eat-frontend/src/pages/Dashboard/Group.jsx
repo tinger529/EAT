@@ -203,7 +203,7 @@ const Group = ({user, group, isGroupsLoading}) => {
             setIsLoading(true)
             setIsError(false)
             try {
-                const res = await api.inviteGroupMember(groupId, invitedUserId)
+                const res = await api.inviteGroupMember(groupId, user.$id, invitedUserId)
                 toast({
                     description: 'Invitation sent',
                     status: 'success',
@@ -262,9 +262,9 @@ const Group = ({user, group, isGroupsLoading}) => {
         return (
             <Stat key={member.$id} mb="2" mr="50" flex="1">
                 <Flex align="center">
-                <Avatar name={member.userName} size="sm" mr="4" />
+                <Avatar name={member.name} size="sm" mr="4" />
                 <Box>
-                <StatLabel whiteSpace="nowrap">{member.userName}</StatLabel>
+                <StatLabel whiteSpace="nowrap">{member.name}</StatLabel>
                 <StatNumber color={sum < 0 ? "red.500" : "teal.500"}>
                     {sum < 0 ? `-${Math.abs(sum)}` : sum}
                 </StatNumber>
@@ -282,7 +282,7 @@ const Group = ({user, group, isGroupsLoading}) => {
                 <CardBody>
                     <Stack spacing={5}>
                         <Input placeholder={"Description"} size={"lg"} maxW={600} onChange={(e) => {
-                            console.log("change")
+                            
                             setDescription(e.target.value)
                         }}></Input>
                         <SimpleGrid columns={{base: 1, md: 2}} spacingX={8} spacingY={5}>
@@ -294,7 +294,7 @@ const Group = ({user, group, isGroupsLoading}) => {
                                             onChange={(e) => handleUserChange(e, index)}>
                                         {members.map((member) => (
                                             <option key={member.$id}
-                                                    value={member.$id}>{member.userName}</option>
+                                                    value={member.$id}>{member.name}</option>
                                         ))}
                                     </Select>
                                     <InputGroup maxWidth={200}>
@@ -334,9 +334,11 @@ const Group = ({user, group, isGroupsLoading}) => {
     }
     //mapping records data's userid to username
     const mappedRecords = records.map((record) => {
-        const mappedData = JSON.parse(record.data).map((item) => {
+        
+        const mappedData = record.data.map((item) => {
+            
             const user = members.find((member) => member.$id === item.userId)
-            return {...item, userName: user.userName}
+            return {...item, userName: user.name}
         })
         return {...record, data: mappedData}
     })
