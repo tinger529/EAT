@@ -16,16 +16,19 @@ def hello(request):
 # user APIs
 @csrf_exempt
 def create_get_user(request):
-    print(request.body)
     if request.method == 'GET':
         # get session id from request header
         session_id = request.headers.get('cookie').split('=')[1]
+        print("---------------><----------------")
+        print(session_id)
         try:
             session = LoginSession.objects.get(session_id=session_id)
         except LoginSession.DoesNotExist:
+            print("not found")
             return HttpResponse('session not found', status=401)
         # find user object if session is not expired
         if session.expire_time > timezone.now():
+            print("I am here!")
             user = session.user
             userJson = {
                 '$id': str(user.id),
@@ -37,7 +40,9 @@ def create_get_user(request):
                 "user":userJson
             }
             response = JsonResponse(response_data, status=201)
-            response['Access-Control-Allow-Origin'] = '*'
+            response['Access-Control-Allow-Origin'] = '*, http://127.0.0.1:5173'
+            print("I respond!")
+            print(response)
             return response
             # return JsonResponse(response_data, status=200)
         else:
@@ -66,7 +71,7 @@ def create_get_user(request):
         # return JsonResponse(response_data, status=201)
     else:
         response = HttpResponse('Other Methods', status=200)
-        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Origin'] = '*, http://127.0.0.1:5173'
         response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
         response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
         
@@ -76,7 +81,7 @@ def create_get_user(request):
 def create_session(request):
     if request.method == 'OPTIONS':
         response = HttpResponse('OK', status=200)
-        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Origin'] = '*, http://127.0.0.1:5173'
         response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
         response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
         return response

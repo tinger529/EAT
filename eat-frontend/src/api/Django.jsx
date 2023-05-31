@@ -5,7 +5,7 @@ import axios from "axios";
 
 let api = {
 
-        url: "http://127.0.0.1:9000",
+        url: "http://127.0.0.1:9001",
 
         example: (data1) => {
             return axios.get(api.url + "/api/v1/example", {
@@ -17,80 +17,29 @@ let api = {
 
         createAccount: (email, password, name) => {
 
-            // method: POST
-            // return: user
-            // response: 201
-            // error: 400
-            // TODO: implement this function
             return axios.post(api.url + "/api/v1/account/", {
                 email: email,
                 password: password,
                 name: name,
                 withCredentials: false,
             })
-
         },
         createSession: (email, password) => {
-            // end point: /api/v1/account/sessions/email
-            // method: POST
-            // return: session
-            // response: 201
-            // error: 400
-            //create a session for the user
-            // const endpoint = '/api/v1/account/sessions/email';
-            // const method = 'POST';
-
-            // try {
-            //     const response = fetch(endpoint, {
-            //         method: method,
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify({
-            //             email: email,
-            //             password: password,
-            //         }),
-            //     });
-
-            //     if (response.status === 201) {
-            //         // Return the session if the account is created successfully
-            //         const data = response.json();
-            //         return data.session;
-            //     } else if (response.status === 400) {
-            //         // Handle error if the request is bad
-            //         throw new Error('Bad Request');
-            //     } else {
-            //         // Handle any other errors
-            //         throw new Error(`Unexpected error: ${response.status}`);
-            //     }
-            // } catch (error) {
-            //     console.error('Error in createSession:', error);
-            //     throw error;
-            // }
+            
             return axios.post(api.url + '/api/v1/account/sessions/email/', {
                 email: email,
                 password: password,
                 withCredentials: false,
             })
-
-
-
         },
 
 
         getAccount: () => {
-            // get login user's account information
-            // end point: /api/v1/account
-            // method: GET
-            // return: user
-            // response: 200
-            // error: 401
-            const endpoint = '/api/v1/account/';
-            const method = 'GET';
 
+            return axios.get(api.url + '/api/v1/account/', {
+                withCredentials: false,
+            })
             
-             
-
         },
 
         getUserInfo: async (userid) => {
@@ -100,33 +49,12 @@ let api = {
             // return: user
             // response: 200
             // error: 401
-            const endpoint = '/api/v1/account/' + userid;
-            const method = 'GET';
+            const endpoint = '/api/v1/account/' + userid + '/';
 
-            try {
-                const response = await fetch(endpoint, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (response.status === 200) {
-                    // Return the session if the account is created successfully
-                    const data = await response.json();
-                    return data.user;
-
-                } else if (response.status === 401) {
-                    // Handle error if the request is bad
-                    throw new Error('Unauthorized');
-                } else {
-                    // Handle any other errors
-                    throw new Error(`Unexpected error: ${response.status}`);
-                }
-            } catch (error) {
-
-                console.error('Error in getAccount:', error);
-                throw error;
-            }
+            return axios.get(endpoint, {
+                withCredentials: false,
+                userId: userid,
+            })
 
         },
 
@@ -139,62 +67,102 @@ let api = {
             // error: 401
             //delete the current session
 
-            const endpoint = '/api/v1/account/sessions/{sessionId}';
-            const method = 'DELETE';
+            const endpoint = '/api/v1/account/sessions/';
 
-
-            return fetch(endpoint, {
-                method: method,
+            return axios.delete(endpoint, {
+                withCredentials: false,
             })
-                .then(res => {
-                    if (res.status === 204) {
-                        return
-                    } else {
-                        throw Error('Unauthorized')
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
         },
 
         // return sum + records
         listRecords: (groupId) => {
+            const endpoint = '/api/v1/databases/groups/' + groupId + '/records/';
 
+            return axios.get(endpoint, {
+                withCredentials: false,
+                groupId: groupId,
+            })
         },
 
         createRecord: (groupId, name, data) => {
+            const endpoint = '/api/v1/databases/groups/' + groupId + '/records/';
 
+            return axios.post(endpoint, {
+                name: name,
+                data: data,
+                withCredentials: false,
+                groupId: groupId,
+            })
         },
 
         deleteRecord: (groupId, recordId) => {
+            const endpoint = '/api/v1/databases/groups/' + groupId + '/records/' + recordId + '/';
 
+            return axios.delete(endpoint, {
+                withCredentials: false,
+                groupId: groupId,
+                recordId: recordId,
+            })
         },
 
         updateRecord: (groupId, recordId, data, name) => {
+            const endpoint = '/api/v1/databases/groups/' + groupId + '/records/' + recordId + '/';
 
+            return axios.patch(endpoint, {
+                data: data,
+                name: name,
+                withCredentials: false,
+                groupId: groupId,
+                recordId: recordId,
+            })
         },
 
         listGroups: (userId) => {
+            const endpoint = '/api/v1/databases/users/' + userId + '/groups/';
 
+            return axios.get(endpoint, {
+                withCredentials: false,
+                userId: userId,
+            })
         },
 
         inviteGroupMember: (groupId, userId) => {
+            const endpoint = '/api/v1/databases/users/' + userId + '/groups/';
 
+            return axios.post(endpoint, {
+                groupId: groupId,
+                withCredentials: false,
+                userId: userId,
+            })
         },
 
         createGroup: (groupName) => {
+            const endpoint = '/api/v1/databases/groups/';
 
+            return axios.post(endpoint, {
+                name: groupName,
+                withCredentials: false,
+            })
         },
 
 
         getGroup: (groupId) => {
+            const endpoint = '/api/v1/databases/groups/' + groupId + '/';
 
+            return axios.get(endpoint, {
+                withCredentials: false,
+                groupId: groupId,
+            })
         },
 
         //return group object
         getGroupInfo: (groupId) => {
+            const endpoint = '/api/v1/databases/groups/' + groupId + '/';
 
+            return axios.get(endpoint, {
+                withCredentials: false,
+                groupId: groupId,
+            })
 
         },
 
