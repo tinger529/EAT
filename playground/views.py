@@ -39,7 +39,7 @@ def create_get_user(request):
                 "user":userJson
             }
             response = JsonResponse(response_data, status=201)
-            response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
+            # response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
             return response
         else:
             return HttpResponse('session expired', status=401)
@@ -74,24 +74,24 @@ def create_get_user(request):
         # response['Access-Control-Allow-Origin'] = '*'
         return response
         # return JsonResponse(response_data, status=201)
-    elif request.method == 'OPTIONS':
-        response = HttpResponse('Other Methods', status=200)
-        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
-        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
-        return response
+    # elif request.method == 'OPTIONS':
+    #     response = HttpResponse('Other Methods', status=200)
+    #     # response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
+    #     response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    #     response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+    #     return response
 
 @csrf_exempt
 def create_session(request):
     # print(request.body)
-    if request.method == 'OPTIONS':
-        response = HttpResponse('OK', status=200)
-        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
-        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        # response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
-        response['Access-Control-Allow-Credentials'] = 'true'
-        response['Access-Control-Allow-Headers'] = 'access-control-request-headers'
-        return response
+    # if request.method == 'OPTIONS':
+    #     response = HttpResponse('OK', status=200)
+    #     response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
+    #     response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    #     # response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+    #     response['Access-Control-Allow-Credentials'] = 'true'
+    #     response['Access-Control-Allow-Headers'] = 'access-control-request-headers'
+    #     return response
     # parse request body (plain text) to json
     data = json.loads(request.body)
     email = data.get('email')
@@ -117,12 +117,12 @@ def create_session(request):
 
 @csrf_exempt
 def get_user(request, userId):
-    if request.method == 'OPTIONS':
-        response = HttpResponse('OK', status=200)
-        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
-        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
-        return response
+    # if request.method == 'OPTIONS':
+    #     response = HttpResponse('OK', status=200)
+    #     response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
+    #     response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    #     response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+    #     return response
     try:
         user = User.objects.get(id=userId)
     except User.DoesNotExist:
@@ -140,12 +140,12 @@ def get_user(request, userId):
 
 @csrf_exempt
 def delete_session(request, sessionId):
-    if request.method == 'OPTIONS':
-        response = HttpResponse('OK', status=200)
-        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
-        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
-        return response
+    # if request.method == 'OPTIONS':
+    #     response = HttpResponse('OK', status=200)
+    #     response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
+    #     response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    #     response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+    #     return response
     try:
         session = LoginSession.objects.get(session_id=sessionId)
         session.delete()
@@ -156,12 +156,12 @@ def delete_session(request, sessionId):
 # group APIs
 @csrf_exempt
 def create_group(request):
-    if request.method == 'OPTIONS':
-        response = HttpResponse('OK', status=200)
-        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
-        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
-        return response
+    # if request.method == 'OPTIONS':
+    #     response = HttpResponse('OK', status=200)
+    #     response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
+    #     response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    #     response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+    #     return response
     # check if session is valid
     session_str = request.headers.get('cookie')
     if session_str is None:
@@ -203,12 +203,12 @@ def create_group(request):
 
 @csrf_exempt
 def get_groupinfo(request, groupId):
-    if request.method == 'OPTIONS':
-        response = HttpResponse('OK', status=200)
-        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
-        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
-        return response
+    # if request.method == 'OPTIONS':
+    #     response = HttpResponse('OK', status=200)
+    #     response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
+    #     response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    #     response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+    #     return response
     # check if session is valid
     session_str = request.headers.get('cookie')
     if session_str is None:
