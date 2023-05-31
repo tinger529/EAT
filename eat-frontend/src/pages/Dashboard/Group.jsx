@@ -278,7 +278,7 @@ const Group = ({user, group, isGroupsLoading}) => {
 
     const NewDataCard = () => {
         return <Card width={"100%"} direction={{base: 'column'}} overflow='hidden'>
-            <HStack>
+            <HStack backgroundColor={"black"}>
                 <CardBody>
                     <Stack spacing={5}>
                         <Input placeholder={"Description"} size={"lg"} maxW={600} onChange={(e) => {
@@ -291,7 +291,8 @@ const Group = ({user, group, isGroupsLoading}) => {
                                     <Select placeholder={"Select user"}
                                             key={index} value={item.userId}
                                             minW={"max-content"}
-                                            onChange={(e) => handleUserChange(e, index)}>
+                                            onChange={(e) => handleUserChange(e, index)}
+                                            color={"white"}>
                                         {members.map((member) => (
                                             <option key={member.$id}
                                                     value={member.$id}>{member.name}</option>
@@ -307,8 +308,7 @@ const Group = ({user, group, isGroupsLoading}) => {
                                         />
                                         <Input type={"number"}
                                                onChange={(e) => handleValueChange(e, index)}
-
-
+                                               color={"white"}
                                         />
                                     </InputGroup>
                                     <IconButton aria-label={"delete"} icon={<DeleteIcon/>} onClick={() => {
@@ -365,10 +365,10 @@ const Group = ({user, group, isGroupsLoading}) => {
         return (
             <>
                 <Card key={record.$id} direction={{base: 'column'}} width={"100%"} overflow='hidden'>
-                    <HStack>
+                    <HStack backgroundColor={"black"}>
                         <CardBody onClick={onToggle}>
-                            <Heading size='md'> {record.name}</Heading>
-                            <Text fontSize={"md"}>{new Date(record.$createdAt).toLocaleString()}</Text>
+                            <Heading size='md' color={"white"}> {record.name}</Heading>
+                            <Text fontSize={"md"} color={"white"}>{new Date(record.$createdAt).toLocaleString()}</Text>
                         </CardBody>
                         <CardFooter>
                             <ButtonGroup variant='ghost' spacing='2'>
@@ -379,7 +379,7 @@ const Group = ({user, group, isGroupsLoading}) => {
                     </HStack>
                 </Card>
                 <Collapse in={isDataOpen} animateOpacity>
-                <Box p="30px" color="black" mt="2" rounded="md" shadow="md">
+                <Box p="30px" color="white" mt="2" rounded="md" shadow="md">
                     <StatGroup>
                     {mappedRecords.find((item) => item.$id === record.$id).data.map((item, index) => (
                     <Stat key={index} w="100" mr="150" flex="1">
@@ -475,7 +475,7 @@ const Group = ({user, group, isGroupsLoading}) => {
                         </HStack>
                         <InviteModal isOpen={isInviteOpen} onClose={onInviteClose}/>
                         //show the amount of money each member owes
-                        <Box p="30px" color="black" mt="2" rounded="md">
+                        <Box p="30px" color="white" mt="2" rounded="md">
                         <Flex direction="row">
                             {members.map((member) => (
                                 <Show_each_amount key={member.$id} member={member}/>

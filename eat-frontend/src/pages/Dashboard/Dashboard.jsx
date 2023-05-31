@@ -157,7 +157,6 @@ const Dashboard = ({user, session, userDispatch}) => {
                                                 m={1}
                                                 variant={"solid"}
                                         >
-
                                             {group.name}
                                         </Button>
                                     )
