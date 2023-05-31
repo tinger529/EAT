@@ -291,7 +291,8 @@ const Group = ({user, group, isGroupsLoading}) => {
                                     <Select placeholder={"Select user"}
                                             key={index} value={item.userId}
                                             minW={"max-content"}
-                                            onChange={(e) => handleUserChange(e, index)}>
+                                            onChange={(e) => handleUserChange(e, index)}
+                                            color={"white"}>
                                         {members.map((member) => (
                                             <option key={member.$id}
                                                     value={member.$id}>{member.userName}</option>
@@ -307,8 +308,7 @@ const Group = ({user, group, isGroupsLoading}) => {
                                         />
                                         <Input type={"number"}
                                                onChange={(e) => handleValueChange(e, index)}
-
-
+                                               color={"white"}
                                         />
                                     </InputGroup>
                                     <IconButton aria-label={"delete"} icon={<DeleteIcon/>} onClick={() => {
