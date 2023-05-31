@@ -11,24 +11,23 @@ from django.views.decorators.csrf import csrf_exempt
 # request handler
 @csrf_exempt
 def hello(request):
-    return render(request, './hello.html', {'name': 'Tinger'})
+    return render(request, './hello.html', {'name': 'Hensuu'})
 
 # user APIs
 @csrf_exempt
 def create_get_user(request):
     if request.method == 'GET':
         # get session id from request header
+        session_str = request.headers.get('cookie')
+        if session_str is None:
+            return HttpResponse('session not found', status=401)
         session_id = request.headers.get('cookie').split('=')[1]
-        print("---------------><----------------")
-        print(session_id)
         try:
             session = LoginSession.objects.get(session_id=session_id)
         except LoginSession.DoesNotExist:
-            print("not found")
             return HttpResponse('session not found', status=401)
         # find user object if session is not expired
         if session.expire_time > timezone.now():
-            print("I am here!")
             user = session.user
             userJson = {
                 '$id': str(user.id),
@@ -40,11 +39,8 @@ def create_get_user(request):
                 "user":userJson
             }
             response = JsonResponse(response_data, status=201)
-            response['Access-Control-Allow-Origin'] = '*, http://127.0.0.1:5173'
-            print("I respond!")
-            print(response)
+            response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
             return response
-            # return JsonResponse(response_data, status=200)
         else:
             return HttpResponse('session expired', status=401)
         
@@ -54,6 +50,15 @@ def create_get_user(request):
         password = data.get('password')
         name = data.get('name')
         # check user objects columns
+        if email is None or password is None or name is None:
+            return HttpResponse('email, password, name are required', status=400)
+        # check if email is unique
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user = None
+        if user is not None:
+            return HttpResponse('email already exists', status=400)
         user = User.objects.create(name=name, password=password, email=email)
         userJson = {
             '$id': str(user.id),
@@ -66,27 +71,27 @@ def create_get_user(request):
         }
         # add header with Access Control Allow Origin
         response = JsonResponse(response_data, status=201)
-        response['Access-Control-Allow-Origin'] = '*'
+        # response['Access-Control-Allow-Origin'] = '*'
         return response
         # return JsonResponse(response_data, status=201)
-    else:
+    elif request.method == 'OPTIONS':
         response = HttpResponse('Other Methods', status=200)
-        response['Access-Control-Allow-Origin'] = '*, http://127.0.0.1:5173'
+        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
         response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
         response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
-        
         return response
 
 @csrf_exempt
 def create_session(request):
+    print(request)
     if request.method == 'OPTIONS':
         response = HttpResponse('OK', status=200)
-        response['Access-Control-Allow-Origin'] = '*, http://127.0.0.1:5173'
+        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
         response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+        # response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+        response['Access-Control-Allow-Credentials'] = 'true'
+        response['Access-Control-Allow-Headers'] = 'access-control-request-headers'
         return response
-    print("---------------------------------")
-    print(request)
     data = json.loads(request.body)
     email = data.get('email')
     password = data.get('password')
@@ -111,6 +116,12 @@ def create_session(request):
 
 @csrf_exempt
 def get_user(request, userId):
+    if request.method == 'OPTIONS':
+        response = HttpResponse('OK', status=200)
+        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+        return response
     try:
         user = User.objects.get(id=userId)
     except User.DoesNotExist:
@@ -128,6 +139,12 @@ def get_user(request, userId):
 
 @csrf_exempt
 def delete_session(request, sessionId):
+    if request.method == 'OPTIONS':
+        response = HttpResponse('OK', status=200)
+        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+        return response
     try:
         session = LoginSession.objects.get(session_id=sessionId)
         session.delete()
@@ -138,7 +155,16 @@ def delete_session(request, sessionId):
 # group APIs
 @csrf_exempt
 def create_group(request):
+    if request.method == 'OPTIONS':
+        response = HttpResponse('OK', status=200)
+        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+        return response
     # check if session is valid
+    session_str = request.headers.get('cookie')
+    if session_str is None:
+        return HttpResponse('session not found', status=401)
     session_id = request.headers.get('cookie').split('=')[1]
     try:
         session = LoginSession.objects.get(session_id=session_id)
@@ -176,7 +202,16 @@ def create_group(request):
 
 @csrf_exempt
 def get_groupinfo(request, groupId):
+    if request.method == 'OPTIONS':
+        response = HttpResponse('OK', status=200)
+        response['Access-Control-Allow-Origin'] = ' http://127.0.0.1:5173'
+        response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'X-Requested-With, Content-Type, Accept, Origin, Authorization'
+        return response
     # check if session is valid
+    session_str = request.headers.get('cookie')
+    if session_str is None:
+        return HttpResponse('session not found', status=401)
     session_id = request.headers.get('cookie').split('=')[1]
     try:
         session = LoginSession.objects.get(session_id=session_id)
@@ -209,10 +244,14 @@ def get_groupinfo(request, groupId):
     else:
         return HttpResponse('session expired', status=401)
 
+
 @csrf_exempt
 def user_group_relation(request, userId):
     if request.method == 'GET':
         # check if session is valid
+        session_str = request.headers.get('cookie')
+        if session_str is None:
+            return HttpResponse('session not found', status=401)
         session_id = request.headers.get('cookie').split('=')[1]
         try:
             session = LoginSession.objects.get(session_id=session_id)
@@ -252,6 +291,9 @@ def user_group_relation(request, userId):
         
     elif request.method == 'POST':
         # check if session is valid
+        session_str = request.headers.get('cookie')
+        if session_str is None:
+            return HttpResponse('session not found', status=401)
         session_id = request.headers.get('cookie').split('=')[1]
         try:
             session = LoginSession.objects.get(session_id=session_id)
@@ -309,6 +351,9 @@ def user_group_relation(request, userId):
 def get_create_record(request, groupId):
     if request.method == 'GET':
         # check if session is valid
+        session_str = request.headers.get('cookie')
+        if session_str is None:
+            return HttpResponse('session not found', status=401)
         session_id = request.headers.get('cookie').split('=')[1]
         try:
             session = LoginSession.objects.get(session_id=session_id)
@@ -370,6 +415,9 @@ def get_create_record(request, groupId):
         
     elif request.method == 'POST':
         # check if session is valid
+        session_str = request.headers.get('cookie')
+        if session_str is None:
+            return HttpResponse('session not found', status=401)
         session_id = request.headers.get('cookie').split('=')[1]
         try:
             session = LoginSession.objects.get(session_id=session_id)
@@ -444,6 +492,9 @@ def get_create_record(request, groupId):
 def update_delete_record(request, groupId, recordId):
     if request.method == 'PATCH':
         # check if session is valid
+        session_str = request.headers.get('cookie')
+        if session_str is None:
+            return HttpResponse('session not found', status=401)
         session_id = request.headers.get('cookie').split('=')[1]
         try:
             session = LoginSession.objects.get(session_id=session_id)
@@ -526,6 +577,9 @@ def update_delete_record(request, groupId, recordId):
             return HttpResponse('session expired', status=401)
     elif request.method == 'DELETE':
         # check if session is valid
+        session_str = request.headers.get('cookie')
+        if session_str is None:
+            return HttpResponse('session not found', status=401)
         session_id = request.headers.get('cookie').split('=')[1]
         try:
             session = LoginSession.objects.get(session_id=session_id)
