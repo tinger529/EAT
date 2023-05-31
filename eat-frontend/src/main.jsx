@@ -14,7 +14,9 @@ const customTheme = extendTheme({
           // background image
           backgroundImage: "https://images.unsplash.com/photo-1527224538127-2104bb71c51b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80",
           backgroundRepeat: "no-repeat",
-          backgroundSize: "100% 150%",
+          backgroundSize: "100% 175%",
+          //background position right top
+          // backgroundPosition: "25% 25%",
         },
       },
     },
