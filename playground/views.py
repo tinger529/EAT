@@ -66,7 +66,7 @@ def create_get_user(request):
         }
         # add header with Access Control Allow Origin
         response = JsonResponse(response_data, status=201)
-        # response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Origin'] = '*'
         return response
         # return JsonResponse(response_data, status=201)
     else:

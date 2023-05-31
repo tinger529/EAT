@@ -21,7 +21,8 @@ let api = {
                 email: email,
                 password: password,
                 name: name,
-                withCredentials: false,
+                withCredentials: true,
+                origin: '*',
             })
         },
         createSession: (email, password) => {
@@ -29,7 +30,8 @@ let api = {
             return axios.post(api.url + '/api/v1/account/sessions/email/', {
                 email: email,
                 password: password,
-                withCredentials: false,
+                withCredentials: true,
+                origin: '*',
             })
         },
 
@@ -37,7 +39,8 @@ let api = {
         getAccount: () => {
 
             return axios.get(api.url + '/api/v1/account/', {
-                withCredentials: false,
+                withCredentials: true,
+                origin: '*'
             })
             
         },
@@ -52,8 +55,9 @@ let api = {
             const endpoint = '/api/v1/account/' + userid + '/';
 
             return axios.get(endpoint, {
-                withCredentials: false,
+                withCredentials: true,
                 userId: userid,
+                origin: '*'
             })
 
         },
@@ -70,7 +74,8 @@ let api = {
             const endpoint = '/api/v1/account/sessions/';
 
             return axios.delete(endpoint, {
-                withCredentials: false,
+                withCredentials: true,
+                origin: '*'
             })
         },
 
@@ -79,8 +84,9 @@ let api = {
             const endpoint = '/api/v1/databases/groups/' + groupId + '/records/';
 
             return axios.get(endpoint, {
-                withCredentials: false,
+                withCredentials: true,
                 groupId: groupId,
+                origin: '*'
             })
         },
 
@@ -90,8 +96,9 @@ let api = {
             return axios.post(endpoint, {
                 name: name,
                 data: data,
-                withCredentials: false,
+                withCredentials: true,
                 groupId: groupId,
+                origin: '*'
             })
         },
 
@@ -99,9 +106,10 @@ let api = {
             const endpoint = '/api/v1/databases/groups/' + groupId + '/records/' + recordId + '/';
 
             return axios.delete(endpoint, {
-                withCredentials: false,
+                withCredentials: true,
                 groupId: groupId,
                 recordId: recordId,
+                origin: '*'
             })
         },
 
@@ -111,9 +119,10 @@ let api = {
             return axios.patch(endpoint, {
                 data: data,
                 name: name,
-                withCredentials: false,
+                withCredentials: true,
                 groupId: groupId,
                 recordId: recordId,
+                origin: '*'
             })
         },
 
@@ -121,8 +130,9 @@ let api = {
             const endpoint = '/api/v1/databases/users/' + userId + '/groups/';
 
             return axios.get(endpoint, {
-                withCredentials: false,
+                withCredentials: true,
                 userId: userId,
+                origin: '*'
             })
         },
 
@@ -131,8 +141,9 @@ let api = {
 
             return axios.post(endpoint, {
                 groupId: groupId,
-                withCredentials: false,
+                withCredentials: true,
                 userId: userId,
+                origin: '*'
             })
         },
 
@@ -141,7 +152,8 @@ let api = {
 
             return axios.post(endpoint, {
                 name: groupName,
-                withCredentials: false,
+                withCredentials: true,
+                origin: '*'
             })
         },
 
@@ -150,8 +162,9 @@ let api = {
             const endpoint = '/api/v1/databases/groups/' + groupId + '/';
 
             return axios.get(endpoint, {
-                withCredentials: false,
+                withCredentials: true,
                 groupId: groupId,
+                origin: '*'
             })
         },
 
@@ -160,8 +173,9 @@ let api = {
             const endpoint = '/api/v1/databases/groups/' + groupId + '/';
 
             return axios.get(endpoint, {
-                withCredentials: false,
+                withCredentials: true,
                 groupId: groupId,
+                origin: '*'
             })
 
         },
