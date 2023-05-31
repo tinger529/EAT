@@ -6,7 +6,7 @@ import axios from "axios";
 let api = {
         // sessionId: null,
 
-        url: "http://127.0.0.1:8000",
+        url: "http://13.114.67.2:3000",
 
         example: (data1) => {
             return axios.get(api.url + "/api/v1/example", {
